@@ -1,0 +1,76 @@
+/*this has the code for the custom elements added in the landing page index2.html*/
+
+/* start for search bar */
+.input-group.md-form.form-sm.form-1 input{
+    border: 1px solid #bdbdbd;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+.input-group.md-form.form-sm.form-2 input {
+    border: 1px solid #bdbdbd;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+.input-group.md-form.form-sm.form-2 input.red-border  {
+    border: 1px solid #ef9a9a;
+}
+.input-group.md-form.form-sm.form-2 input.lime-border  {
+    border: 1px solid #cddc39;
+}
+.input-group.md-form.form-sm.form-2 input.amber-border  {
+    border: 1px solid #ffca28;
+}
+/* end for search bar */
+
+.car_info_div {
+	float: left;
+    background-color: rgba(200,200,200,0.2);
+    border-radius: 12px 0px;
+    margin-bottom: 3.5vmin;
+    box-shadow: 0px 0px 5px #000;
+    padding: 10px;
+}
+
+.car_info_details {
+	float: left;
+	position: relative;
+	width: 45%;
+	left: 5%;
+
+}
+
+.car_info_image {
+	float: left;
+	position: relative;
+	width: 50%;
+	/*margin: 10px 0px;*/
+}
+
+.like_button {
+	position: absolute;
+	/*width: 4vmin;*/
+	/*height: 4vmin;*/
+	padding: 1vmin;
+	right: 5%;
+	top: 0%;
+	transform: translateY(-50%);
+	background-color: pink;
+	font-size: 3vmin;
+	border-radius: 10px;
+	box-shadow: 0 0 10px #aaa;
+}
+
+.car_purchase_button {
+	position: absolute;
+	width: 30%;
+	bottom: 5%;
+	/*width: 4vmin;*/
+	/*height: 4vmin;*/
+	border-top: solid 1px solid #eee;
+	right: 3%;
+	text-align: center;
+	background-color: purple;
+	color: #fff;
+	border-radius: 10px;
+}
+

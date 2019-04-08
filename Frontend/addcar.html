@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>WPI Cars - Add New Listing</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+    <link href="css/addcar.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+        <div class="sidebar-heading">Add New Listing</div>
+        <div class="list-group list-group-flush">
+            <a href="#" class="list-group-item list-group-item-action bg-light" id="side-bar-basic">Basic Information</a>
+            <a href="#" class="list-group-item list-group-item-action bg-light" id="side-bar-detailed">Detailed Information</a>
+            <!--<a href="#" class="list-group-item list-group-item-action bg-light" id="side-bar-finish">Finish</a>-->
+
+        </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Username placeholder
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="user.html">My Account</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Log Out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+        <form>
+            <div class="form-group" id="basic-info-content">
+                <h3>Tell us about your vehicle:</h3>
+                <!--String year = "";-->
+                <!--String make = "";-->
+                <!--String model = "";-->
+                <!--String trim = "";-->
+             	
+                <ul class="navbar-nav">
+                	<li>
+                        <label for="year">Year:</label>
+                        <input type="number" class="form-control" id="year" min="2000">
+                    </li>
+                    <li>
+                    	<label for="make">Make:</label>
+                        <select class="form-control" id="make">
+                        	<option>-</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label for="model">Model:</label>
+                        <select class="form-control" id="model">
+                        	<option>-</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label for="trim">Trim:</label>
+                        <select class="form-control" id="trim">
+                        	<option>-</option>
+                        </select>
+                    </li>
+                    <div class="dropdown-divider"></div>
+                    <button class="btn btn-info" id="next">Continue</button>                 
+                    
+                </ul>
+            </div>
+            <div class="form-group" id="detailed-info-content">
+                <h3>Tell us more about your vehicle:</h3>
+
+                <!--String VIN = "";-->
+                <!--int model = -1;-->
+                <!--int mileage = -1;-->
+                <!--int price = -1;-->
+                <!--String color = "";-->
+                <!--String user_name = "";-->
+                <ul class="navbar-nav">
+                    <li>
+                        <label for="vin">VIN:</label>
+                        <input type="text" class="form-control" id="vin">
+                    </li>
+                    <li>
+                        <label for="mile">Mileage:</label>
+                        <input type="text" class="form-control" id="mile">
+                    </li>
+                    <li>
+                        <label for="color">Color:</label>
+                        <input type="text" class="form-control" id="color">
+                    </li>
+                    <li>
+                        <label for="price">Price (in USD):</label>
+                        <input type="text" class="form-control" id="price">
+                    </li>
+                    <li>
+                        <label for="contact">Contact:</label>
+                        <input type="text" class="form-control" id="contact">
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a href="#" class="btn btn-info" id="create-new-listing">Create New Listing</a>
+                    </li>
+                </ul>
+
+            </div>
+           </form>
+            
+            
+
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Bootstrap core JavaScript -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/addcar.js"></script>
+
+
+
+</body>
+
+</html>
