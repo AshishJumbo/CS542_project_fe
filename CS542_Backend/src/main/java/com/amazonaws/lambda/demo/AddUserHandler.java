@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 import org.json.*;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.amazonaws.services.lambda.runtime.Context;
@@ -26,6 +27,7 @@ public class AddUserHandler implements RequestStreamHandler {
         //	default value
         String user_name = "";
         String password = "";
+        String email = "";
         
         try {
         	JSONObject event = (JSONObject)parser.parse(reader);
@@ -36,13 +38,16 @@ public class AddUserHandler implements RequestStreamHandler {
             if ( event.get("password") != null) {
             	password = (String)event.get("password");
             }
+            if (event.get("email") != null) {
+            	email = (String)event.get("email");
+            }
 
             //	Error handle
             if (user_name == "" || password == "") {
             	throw new Exception("Invalid input to add new user");
             }
             
-            addUser(user_name, password, context);
+            addUser(user_name, password, email, context);
             
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
@@ -61,7 +66,7 @@ public class AddUserHandler implements RequestStreamHandler {
         writer.close();
     }
     
-	private void addUser(String user_name, String password, Context context) {
+	private void addUser(String user_name, String password, String email, Context context) {
 		LambdaLogger logger = context.getLogger();
 		try {
     		String url = "jdbc:mysql://cardb.clnm8zsvchg3.us-east-2.rds.amazonaws.com:3306";
@@ -72,8 +77,8 @@ public class AddUserHandler implements RequestStreamHandler {
     	    Statement stmt = conn.createStatement();
     	    
     	    //	Add new user
-    	    String newUser = String.format("INSERT INTO innodb.User (user_name, password) VALUES ('%s', '%s')",
-    	    		user_name, password);
+    	    String newUser = String.format("INSERT INTO innodb.User (user_name, password, email) VALUES ('%s', '%s', '%s')",
+    	    		user_name, password, email);
     	    stmt.executeUpdate(newUser);
     	    
     	    stmt.close();
