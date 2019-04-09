@@ -17,7 +17,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
-public class AddModelHandler implements RequestStreamHandler {
+public class AddWatchlist implements RequestStreamHandler {
 	JSONParser parser = new JSONParser();
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
@@ -28,34 +28,20 @@ public class AddModelHandler implements RequestStreamHandler {
         JSONObject responseJson = new JSONObject();
         String responseCode = "200";
         
-        //	default value
-        String year = "";
-        String make = "";
-        String model = "";
-        String trim = "";
+        String user_name = "";
+        String VIN = "";
         
         try {
         	JSONObject event = (JSONObject)parser.parse(reader);
         	logger.log(event.toString());
-            if ( event.get("year") != null) {
-                year = (String)event.get("year");
+        	if ( event.get("user_name") != null) {
+            	user_name = (String)event.get("user_name");
             }
-            if ( event.get("make") != null) {
-                make = (String)event.get("make");
-            }
-            if ( event.get("model") != null) {
-                model = (String)event.get("model");
-            }
-            if ( event.get("trim") != null) {
-                trim = (String)event.get("trim");
-            }
-
-            //	Error handle
-            if (year == "" || make == "" || model == "") {
-            	throw new Exception("Invalid input to add new model");
+        	if ( event.get("VIN") != null) {
+            	VIN = (String)event.get("VIN");
             }
             
-            addModel(year, make, model, trim, context);
+            addWatchlist(VIN, user_name, context);
             
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
@@ -66,14 +52,15 @@ public class AddModelHandler implements RequestStreamHandler {
 
         } catch(Exception pex) {
             logger.log(pex.toString());
+            logger.log("" + pex.getStackTrace()[0].getLineNumber());
         }
-
+        
         logger.log(responseJson.toString());
         OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
         writer.write(responseJson.toString());  
         writer.close();
     }
-	private void addModel(String year, String make, String model, String trim, Context context) {
+	private void addWatchlist(String VIN, String user_name, Context context) {
 		LambdaLogger logger = context.getLogger();
 		try {
     		String url = "jdbc:mysql://cardb.clnm8zsvchg3.us-east-2.rds.amazonaws.com:3306";
@@ -83,11 +70,11 @@ public class AddModelHandler implements RequestStreamHandler {
     	    Connection conn = DriverManager.getConnection(url, username, dbpassword);
     	    Statement stmt = conn.createStatement();
     	    
-    	    //	Add new model
-    	    String newModel = String.format("INSERT INTO innodb.Model (year, make, model, trim, transmission, engine, drive_type)"
-    	    		+ " VALUES ('%s', '%s', '%s', '%s')",
-    	    		year, make, model, trim);
-    	    stmt.executeUpdate(newModel);
+    	    //	Add new car
+    	    String newWatchlist = String.format("INSERT INTO innodb.Watchlist (VIN, user_name)"
+    	    		+ " VALUES ('%s', '%s')",
+    	    		VIN, user_name);
+    	    stmt.executeUpdate(newWatchlist);
     	    
     	    stmt.close();
     	    conn.close();

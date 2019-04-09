@@ -62,43 +62,43 @@
         </nav>
 
         <div class="container-fluid">
-            <div class="container-fluid" id="basic-info-content">
+        <form>
+            <div class="form-group" id="basic-info-content">
                 <h3>Tell us about your vehicle:</h3>
                 <!--String year = "";-->
                 <!--String make = "";-->
                 <!--String model = "";-->
                 <!--String trim = "";-->
-                <!--String transmission = "";-->
-                <!--String engine = "";-->
-                <!--String drive_type = "";-->
+             	
                 <ul class="navbar-nav">
-                    <li>
-                        <p>Year:</p>
+                	<li>
+                        <label for="year">Year:</label>
+                        <input type="number" class="form-control" id="year" min="2000">
                     </li>
                     <li>
-                        <p>Make:</p>
+                    	<label for="make">Make:</label>
+                        <select class="form-control" id="make">
+                        	<option>-</option>
+                        </select>
                     </li>
                     <li>
-                        <p>Model:</p>
+                        <label for="model">Model:</label>
+                        <select class="form-control" id="model">
+                        	<option>-</option>
+                        </select>
                     </li>
                     <li>
-                        <p>Trim:</p>
+                        <label for="trim">Trim:</label>
+                        <select class="form-control" id="trim">
+                        	<option>-</option>
+                        </select>
                     </li>
-                    <li>
-                        <p>Transmission:</p>
-                    </li>
-                    <li>
-                        <p>Engine:</p>
-                    </li>
-                    <li>
-                        <p>Drive-Type:</p>
-                    </li>
-
+                    <div class="dropdown-divider"></div>
+                    <button class="btn btn-info" id="next">Continue</button>                 
+                    
                 </ul>
-
-
             </div>
-            <div class="container" id="detailed-info-content">
+            <div class="form-group" id="detailed-info-content">
                 <h3>Tell us more about your vehicle:</h3>
 
                 <!--String VIN = "";-->
@@ -109,19 +109,24 @@
                 <!--String user_name = "";-->
                 <ul class="navbar-nav">
                     <li>
-                        <p>VIN:</p>
+                        <label for="vin">VIN:</label>
+                        <input type="text" class="form-control" id="vin">
                     </li>
                     <li>
-                        <p>Mileage:</p>
+                        <label for="mile">Mileage:</label>
+                        <input type="text" class="form-control" id="mile">
                     </li>
                     <li>
-                        <p>Color:</p>
+                        <label for="color">Color:</label>
+                        <input type="text" class="form-control" id="color">
                     </li>
                     <li>
-                        <p>Price:</p>
+                        <label for="price">Price (in USD):</label>
+                        <input type="text" class="form-control" id="price">
                     </li>
                     <li>
-                        <p>Contact:</p>
+                        <label for="contact">Contact:</label>
+                        <input type="text" class="form-control" id="contact">
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
@@ -130,6 +135,9 @@
                 </ul>
 
             </div>
+           </form>
+            
+            
 
         </div>
     </div>
