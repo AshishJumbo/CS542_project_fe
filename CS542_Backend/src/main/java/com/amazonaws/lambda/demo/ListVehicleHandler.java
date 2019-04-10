@@ -62,7 +62,6 @@ public class ListVehicleHandler implements RequestStreamHandler {
     	    String username = "calcAdmin";
     	    String dbpassword = "rootmasterpassword";
 
-//    	    Class.forName("com.mysql.jdbc.Driver");
     	    Connection conn = DriverManager.getConnection(url, username, dbpassword);
     	    Statement stmt = conn.createStatement();
     	    
