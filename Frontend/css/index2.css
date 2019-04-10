@@ -31,6 +31,10 @@
     padding: 10px;
 }
 
+.car_info_div, .car_info_div * {
+  font-size: 2.56vmin;
+}
+
 .car_info_details {
 	float: left;
 	position: relative;
@@ -62,7 +66,7 @@
 
 .car_purchase_button {
 	position: absolute;
-	width: 30%;
+	width: 25%;
 	bottom: 5%;
 	/*width: 4vmin;*/
 	/*height: 4vmin;*/
@@ -74,3 +78,20 @@
 	border-radius: 10px;
 }
 
+.car_more_info_button {
+	position: absolute;
+	width: 40%;
+	bottom: 5%;
+	/*width: 4vmin;*/
+	/*height: 4vmin;*/
+	border-top: solid 1px solid #eee;
+	right: 31%;
+	text-align: center;
+	background-color: purple;
+	color: #fff;
+	border-radius: 10px;
+}
+
+.row_custom_info{
+  padding: 2vmin 0 0 0;
+}
