@@ -67,22 +67,30 @@ public class ListVehicleHandler implements RequestStreamHandler {
     	    Statement stmt = conn.createStatement();
     	    
     	    //	Add new car
-    	    String listVehicle = String.format("SELECT a.VIN, b.year, b.make, b.model, b.trim, a.mileage, a.price, a.color, a.user_name "
-    	    		+ "FROM innodb.Car AS a INNER JOIN innodb.Model AS b ON a.model = b.id");
+    	    String listVehicle = "select car.id, car.year, make.name, car.makeId, model.name, car.modelId, trim.name, car.trimId, car.price, car.mile, car.desc, user.email\n" + 
+    	    		"from innodb.Car as car\n" + 
+    	    		"inner join innodb.Make as make on car.makeId = make.id\n" + 
+    	    		"inner join innodb.Model as model on car.modelId = model.id\n" + 
+    	    		"inner join innodb.Trim as trim on car.trimId = trim.id\n" + 
+    	    		"inner join innodb.User as user on car.userId = user.id";
     	    ResultSet resultSet = stmt.executeQuery(listVehicle);
+    	    logger.log(resultSet.toString());
     	    
     	    JSONArray vehicleList = new JSONArray();
     	    while (resultSet.next()) {
     	    	JSONObject vehicle = new JSONObject();
-    	    	vehicle.put("VIN", resultSet.getString("a.VIN"));
-    	    	vehicle.put("year", resultSet.getString("b.year"));
-    	    	vehicle.put("make", resultSet.getString("b.make"));
-    	    	vehicle.put("model", resultSet.getString("b.model"));
-    	    	vehicle.put("trim", resultSet.getString("b.trim"));
-    	    	vehicle.put("mileage", resultSet.getInt("a.mileage"));
-    	    	vehicle.put("price", resultSet.getInt("a.price"));
-    	    	vehicle.put("color", resultSet.getString("a.color"));
-    	    	vehicle.put("user_name", resultSet.getString("a.user_name"));
+    	    	vehicle.put("carId", resultSet.getString("car.id"));
+    	    	vehicle.put("year", resultSet.getString("car.year"));
+    	    	vehicle.put("make", resultSet.getString("make.name"));
+    	    	vehicle.put("makeId", resultSet.getString("car.makeId"));
+    	    	vehicle.put("model", resultSet.getString("model.name"));
+    	    	vehicle.put("modelId", resultSet.getString("car.modelId"));
+    	    	vehicle.put("trim", resultSet.getString("trim.name"));
+    	    	vehicle.put("trimId", resultSet.getString("car.trimId"));
+    	    	vehicle.put("price", resultSet.getString("car.price"));
+    	    	vehicle.put("mile", resultSet.getInt("car.mile"));
+    	    	vehicle.put("desc", resultSet.getString("car.desc"));
+    	    	vehicle.put("email", resultSet.getString("user.email"));
     	    	vehicleList.add(vehicle);
     	    }
     	    
