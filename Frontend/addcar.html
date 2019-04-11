@@ -62,35 +62,45 @@
         </nav>
 
         <div class="container-fluid">
-        <form>
+        <form id="new-car">
             <div class="form-group" id="basic-info-content">
                 <h3>Tell us about your vehicle:</h3>
                 <!--String year = "";-->
                 <!--String make = "";-->
                 <!--String model = "";-->
                 <!--String trim = "";-->
-             	
+
                 <ul class="navbar-nav">
                 	<li>
                         <label for="year">Year:</label>
                         <input type="text" class="form-control" id="year">
                     </li>
                     <li>
-                    	<label for="make">Make:</label>
-                        <select class="form-control" id="make">
-                        	<option>-</option>
+                    	<label for="makeId">Make:</label>
+                        <select class="form-control" id="makeId">
+                          	<option>-</option>
+                            <option value="2">Honda</option>
+                            <option value="1">Toyota</option>
+                            <option value="3">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="mercedes">Mercedes</option>
+                            <option value="audi">Audi</option>
                         </select>
                     </li>
                     <li>
-                        <label for="model">Model:</label>
-                        <select class="form-control" id="model">
+                        <label for="modelId">Model:</label>
+                        <select class="form-control" id="modelId">
                         	<option>-</option>
+                          <option value="2">Camry</option>
+                          <option value="1">Corolla</option>
+                          <option value="3">Highlander</option>
                         </select>
                     </li>
                     <li>
-                        <label for="trim">Trim:</label>
-                        <select class="form-control" id="trim">
+                        <label for="trimId">Trim:</label>
+                        <select class="form-control" id="trimId">
                         	<option>-</option>
+                        	<option value="2">Base Model</option>
                         </select>
                     </li>
                     <li class="dropdown-divider"></li>
@@ -128,8 +138,8 @@
                         <input type="text" class="form-control" id="price">
                     </li>
                     <li>
-                        <label for="desc">Description:</label>
-                        <textarea type="text" class="form-control" rows="4" id="desc"></textarea>
+                        <label for="description">Description:</label>
+                        <textarea type="text" class="form-control" rows="4" id="description"></textarea>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>
@@ -143,8 +153,8 @@
 
             </div>
            </form>
-            
-            
+
+
 
         </div>
     </div>
@@ -157,6 +167,9 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/addcar.js"></script>
+<script src="js/bootbox/bootbox.all.min.js"></script>
+<script src="js/bootbox/bootbox.locales.min.js"></script>
+<script src="js/bootbox/bootbox.min.js"></script>
 
 
 
