@@ -98,7 +98,7 @@ public class GetWatchList implements RequestStreamHandler {
     	    	vehicle.put("mile", resultSet.getInt("car.mile"));
     	    	vehicle.put("price", resultSet.getInt("car.price"));
     	    	vehicle.put("color", resultSet.getString("car.color"));
-    	    	vehicle.put("desc", resultSet.getString("car.desc"));
+    	    	vehicle.put("desc", resultSet.getString("car.description"));
     	    	vehicleList.add(vehicle);
     	    }
     	    
