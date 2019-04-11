@@ -51,7 +51,6 @@ public class AddUserHandler implements RequestStreamHandler {
             
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
-
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
             responseJson.put("body", responseBody.toString());  

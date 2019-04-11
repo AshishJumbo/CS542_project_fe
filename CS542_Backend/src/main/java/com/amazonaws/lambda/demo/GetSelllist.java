@@ -21,6 +21,7 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
 public class GetSelllist implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
+
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
         LambdaLogger logger = context.getLogger();
@@ -33,13 +34,13 @@ public class GetSelllist implements RequestStreamHandler {
         int userId = 0;
 
         try {
-            JSONObject event = (JSONObject)parser.parse(reader);
+            JSONObject event = (JSONObject) parser.parse(reader);
             logger.log(event.toString());
-            if ( event.get("userId") != null) {
-                userId = Integer.parseInt((String)event.get("userId"));
+            if (event.get("userId") != null) {
+                userId = Integer.parseInt((String) event.get("userId"));
             }
 
-            JSONObject vehicleList = getWatchlist(userId, context);
+            JSONObject vehicleList = getSelllist(userId, context);
 
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
@@ -49,7 +50,7 @@ public class GetSelllist implements RequestStreamHandler {
             responseJson.put("statusCode", responseCode);
             responseJson.put("body", responseBody.toString());
 
-        } catch(Exception pex) {
+        } catch (Exception pex) {
             logger.log(pex.toString());
             logger.log("" + pex.getStackTrace()[0].getLineNumber());
         }
@@ -59,7 +60,8 @@ public class GetSelllist implements RequestStreamHandler {
         writer.write(responseJson.toString());
         writer.close();
     }
-    private JSONObject getWatchlist(int userId, Context context) {
+
+    private JSONObject getSelllist(int userId, Context context) {
         LambdaLogger logger = context.getLogger();
         JSONObject rs = new JSONObject();
         try {
