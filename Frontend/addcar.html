@@ -49,7 +49,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Username placeholder
+                            Username
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="user.html">My Account</a>
@@ -73,7 +73,7 @@
                 <ul class="navbar-nav">
                 	<li>
                         <label for="year">Year:</label>
-                        <input type="number" class="form-control" id="year" min="2000">
+                        <input type="text" class="form-control" id="year">
                     </li>
                     <li>
                     	<label for="make">Make:</label>
@@ -93,9 +93,12 @@
                         	<option>-</option>
                         </select>
                     </li>
-                    <div class="dropdown-divider"></div>
-                    <button class="btn btn-info" id="next">Continue</button>                 
-                    
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a href="#" class="btn btn-dark" id="next">Continue</a>
+                    </li>
+
+
                 </ul>
             </div>
             <div class="form-group" id="detailed-info-content">
@@ -125,8 +128,12 @@
                         <input type="text" class="form-control" id="price">
                     </li>
                     <li>
-                        <label for="contact">Contact:</label>
-                        <input type="text" class="form-control" id="contact">
+                        <label for="desc">Description:</label>
+                        <textarea type="text" class="form-control" rows="4" id="desc"></textarea>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li>
+                        <a href="#" class="btn btn-dark" id="prev">Go Back</a>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li>

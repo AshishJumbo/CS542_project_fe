@@ -66,7 +66,7 @@ public class ListVehicleHandler implements RequestStreamHandler {
     	    Statement stmt = conn.createStatement();
     	    
     	    //	Add new car
-    	    String listVehicle = "select car.id, car.year, make.name, car.makeId, model.name, car.modelId, trim.name, car.trimId, car.price, car.mile, car.desc, user.email\n" + 
+    	    String listVehicle = "select car.id, car.year, make.name, car.makeId, model.name, car.modelId, trim.name, car.trimId, car.price, car.mile, car.description, user.email\n" + 
     	    		"from innodb.Car as car\n" + 
     	    		"inner join innodb.Make as make on car.makeId = make.id\n" + 
     	    		"inner join innodb.Model as model on car.modelId = model.id\n" + 
@@ -88,7 +88,7 @@ public class ListVehicleHandler implements RequestStreamHandler {
     	    	vehicle.put("trimId", resultSet.getString("car.trimId"));
     	    	vehicle.put("price", resultSet.getString("car.price"));
     	    	vehicle.put("mile", resultSet.getInt("car.mile"));
-    	    	vehicle.put("desc", resultSet.getString("car.desc"));
+    	    	vehicle.put("description", resultSet.getString("car.description"));
     	    	vehicle.put("email", resultSet.getString("user.email"));
     	    	vehicleList.add(vehicle);
     	    }
