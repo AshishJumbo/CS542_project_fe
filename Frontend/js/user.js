@@ -41,7 +41,7 @@ $(document).ready(function(){
       type: 'POST',
       data: JSON.stringify( data ),
       contentType: 'application/json',
-      url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/test1/adduser',
+      url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/adduser',
       xhrFields: {
         withCredentials: false
       },
