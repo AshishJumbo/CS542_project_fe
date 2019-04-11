@@ -73,7 +73,7 @@ public class GetWatchList implements RequestStreamHandler {
     	    
     	    //	Add new car
     	    String listVehicle = String.format("select car.id, car.year, car.makeId, make.name, car.modelId, model.name, car.trimId, trim.name,\n" + 
-    	    		"car.vin, car.mile, car.color, car.price, car.desc\n" + 
+    	    		"car.vin, car.mile, car.color, car.price, car.description\n" +
     	    		"from (select watchlist.carId\n" + 
     	    		"		from innodb.Watchlist as watchlist\n" + 
     	    		"		where watchlist.userId = '%d') as temp1\n" + 
