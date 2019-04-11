@@ -29,41 +29,58 @@ public class AddCarHandler implements RequestStreamHandler {
         String responseCode = "200";
         
         //	default value
-        String VIN = "";
-        int model = -1;
-        int mileage = -1;
-        int price = -1;
+        int year = 0;
+        int makeId = 0;
+        int modelId = 0;
+        int trimId = 0;
+        String vin = "";
+        int mile = 0;
         String color = "";
-        String user_name = "";
+        int price = 0;
+        String desc = "";
+        int userId = 0;
         
         try {
         	JSONObject event = (JSONObject)parser.parse(reader);
         	logger.log(event.toString());
-            if ( event.get("VIN") != null) {
-            	VIN = (String)event.get("VIN");
+        	
+            if ( event.get("year") != null) {
+                year = Integer.parseInt((String)event.get("year"));
             }
-            if ( event.get("model") != null) {
-                model = Integer.parseInt((String)event.get("model"));
+            if ( event.get("makeId") != null) {
+            	makeId = Integer.parseInt((String)event.get("makeId"));
             }
-            if ( event.get("mileage") != null) {
-                mileage = Integer.parseInt((String)event.get("mileage"));
+            if ( event.get("modelId") != null) {
+            	modelId = Integer.parseInt((String)event.get("modelId"));
             }
-            if ( event.get("price") != null) {
-                price = Integer.parseInt((String)event.get("price"));
+            if ( event.get("trimId") != null) {
+            	trimId = Integer.parseInt((String)event.get("trimId"));
+            }
+            if ( event.get("vin") != null) {
+            	vin = (String)event.get("vin");
+            }
+            if ( event.get("mile") != null) {
+            	mile = Integer.parseInt((String)event.get("mile"));
             }
             if ( event.get("color") != null) {
-                color = (String)event.get("color");
+            	color = (String)event.get("color");
             }
-            if ( event.get("user_name") != null) {
-                user_name = (String)event.get("user_name");
+            if ( event.get("price") != null) {
+            	price = Integer.parseInt((String)event.get("price"));
+            }
+            if ( event.get("desc") != null) {
+            	desc = (String)event.get("desc");
+            }
+            if ( event.get("userId") != null) {
+            	userId = Integer.parseInt((String)event.get("userId"));
             }
 
-            //	Error handle
-            if (VIN == "" || model == -1 || mileage == -1 || color == "" || user_name == "") {
-            	throw new Exception("Invalid input to add new car");
-            }
+//            //	Error handle
+//            if (VIN == "" || model == -1 || mileage == -1 || color == "" || user_name == "") {
+//            	throw new Exception("Invalid input to add new car");
+//            }
             
-            addCar(VIN, model, mileage, price, color, user_name, context);
+            addCar(year, makeId, modelId, trimId, vin, mile, color, price, desc, userId, context);
             
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
@@ -81,7 +98,7 @@ public class AddCarHandler implements RequestStreamHandler {
         writer.write(responseJson.toString());  
         writer.close();
     }
-	private void addCar(String VIN, int model, int mileage, int price, String color, String user_name,
+	private void addCar(int year, int makeId, int modelId, int trimId, String vin, int mile, String color, int price, String desc, int userId,
 			Context context) {
 		LambdaLogger logger = context.getLogger();
 		try {
@@ -93,9 +110,9 @@ public class AddCarHandler implements RequestStreamHandler {
     	    Statement stmt = conn.createStatement();
     	    
     	    //	Add new car
-    	    String newCar = String.format("INSERT INTO innodb.Car (VIN, model, mileage, price, color, user_name)"
-    	    		+ " VALUES ('%s', '%s', %d, %d, '%s', '%s')",
-    	    		VIN, model, mileage, price, color, user_name);
+    	    String newCar = String.format("INSERT INTO innodb.Car (year, makeId, modelId, trimId, vin, mile, color, price, desc, userId)"
+    	    		+ " VALUES (%d, %d, %d, %d, '%s', %d, '%s', %d, '%s', %d)",
+    	    		year, makeId, modelId, trimId, vin, mile, color, price, desc, userId);
     	    stmt.executeUpdate(newCar);
     	    
     	    stmt.close();
