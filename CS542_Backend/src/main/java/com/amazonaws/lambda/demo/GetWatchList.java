@@ -30,16 +30,16 @@ public class GetWatchList implements RequestStreamHandler {
         JSONObject responseJson = new JSONObject();
         String responseCode = "200";
         
-        String user_name = "";
+        int userId = 0;
         
         try {
         	JSONObject event = (JSONObject)parser.parse(reader);
         	logger.log(event.toString());
-        	if ( event.get("user_name") != null) {
-            	user_name = (String)event.get("user_name");
+        	if ( event.get("userId") != null) {
+            	userId = Integer.parseInt((String)event.get("userId"));
             }
             
-            JSONObject vehicleList = getWatchlist(user_name, context);
+            JSONObject vehicleList = getWatchlist(userId, context);
             
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
@@ -59,7 +59,7 @@ public class GetWatchList implements RequestStreamHandler {
         writer.write(responseJson.toString());  
         writer.close();
     }
-	private JSONObject getWatchlist(String user_name, Context context) {
+	private JSONObject getWatchlist(int userId, Context context) {
 		LambdaLogger logger = context.getLogger();
 		JSONObject rs = new JSONObject();
 		try {
@@ -72,27 +72,33 @@ public class GetWatchList implements RequestStreamHandler {
     	    Statement stmt = conn.createStatement();
     	    
     	    //	Add new car
-    	    String listVehicle = String.format("SELECT c.VIN, m.year, m.make, m.model, m.trim, c.mileage, c.price, c.color, c.user_name " + 
-							    	    		"FROM (SELECT VIN FROM innodb.Watchlist AS w " + 
-							    	    		"WHERE w.user_name = '%s') AS v " + 
-							    	    		"INNER JOIN innodb.Car as c " + 
-							    	    		"ON v.VIN = c.VIN " + 
-							    	    		"INNER JOIN innodb.Model as m " + 
-							    	    		"ON c.model = m.id", user_name);
+    	    String listVehicle = String.format("select car.id, car.year, car.makeId, make.name, car.modelId, model.name, car.trimId, trim.name,\n" + 
+    	    		"car.vin, car.mile, car.color, car.price, car.desc\n" + 
+    	    		"from (select watchlist.carId\n" + 
+    	    		"		from innodb.Watchlist as watchlist\n" + 
+    	    		"		where watchlist.userId = '%d') as temp1\n" + 
+    	    		"inner join innodb.Car as car on temp1.carId = car.id\n" + 
+    	    		"inner join innodb.Make as make on car.makeId = make.id\n" + 
+    	    		"inner join innodb.Model as model on car.modelId = model.id\n" + 
+    	    		"inner join innodb.Trim as trim on car.trimId = trim.id", userId);
     	    ResultSet resultSet = stmt.executeQuery(listVehicle);
     	    
     	    JSONArray vehicleList = new JSONArray();
     	    while (resultSet.next()) {
     	    	JSONObject vehicle = new JSONObject();
-    	    	vehicle.put("VIN", resultSet.getString("c.VIN"));
-    	    	vehicle.put("year", resultSet.getString("m.year"));
-    	    	vehicle.put("make", resultSet.getString("m.make"));
-    	    	vehicle.put("model", resultSet.getString("m.model"));
-    	    	vehicle.put("trim", resultSet.getString("m.trim"));
-    	    	vehicle.put("mileage", resultSet.getInt("c.mileage"));
-    	    	vehicle.put("price", resultSet.getInt("c.price"));
-    	    	vehicle.put("color", resultSet.getString("c.color"));
-    	    	vehicle.put("user_name", resultSet.getString("c.user_name"));
+    	    	vehicle.put("carId", resultSet.getString("car.id"));
+    	    	vehicle.put("year", resultSet.getString("car.year"));
+    	    	vehicle.put("makeId", resultSet.getString("car.makeId"));
+    	    	vehicle.put("make", resultSet.getString("make.name"));
+    	    	vehicle.put("modelId", resultSet.getString("car.modelId"));
+    	    	vehicle.put("model", resultSet.getString("model.name"));
+    	    	vehicle.put("trimId", resultSet.getString("car.trimId"));
+    	    	vehicle.put("trim", resultSet.getString("trim.name"));
+    	    	vehicle.put("vin", resultSet.getString("car.vin"));
+    	    	vehicle.put("mile", resultSet.getInt("car.mile"));
+    	    	vehicle.put("price", resultSet.getInt("car.price"));
+    	    	vehicle.put("color", resultSet.getString("car.color"));
+    	    	vehicle.put("desc", resultSet.getString("car.desc"));
     	    	vehicleList.add(vehicle);
     	    }
     	    

@@ -28,20 +28,20 @@ public class AddWatchlist implements RequestStreamHandler {
         JSONObject responseJson = new JSONObject();
         String responseCode = "200";
         
-        String user_name = "";
-        String VIN = "";
+        int userId = -1;
+        int carId = -1;
         
         try {
         	JSONObject event = (JSONObject)parser.parse(reader);
         	logger.log(event.toString());
-        	if ( event.get("user_name") != null) {
-            	user_name = (String)event.get("user_name");
+        	if ( event.get("userId") != null) {
+            	userId = Integer.parseInt((String)event.get("userId"));
             }
-        	if ( event.get("VIN") != null) {
-            	VIN = (String)event.get("VIN");
+        	if ( event.get("carId") != null) {
+            	carId = Integer.parseInt((String)event.get("carId"));
             }
             
-            addWatchlist(VIN, user_name, context);
+            addWatchlist(userId, carId, context);
             
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
@@ -60,7 +60,7 @@ public class AddWatchlist implements RequestStreamHandler {
         writer.write(responseJson.toString());  
         writer.close();
     }
-	private void addWatchlist(String VIN, String user_name, Context context) {
+	private void addWatchlist(int userId, int carId, Context context) {
 		LambdaLogger logger = context.getLogger();
 		try {
     		String url = "jdbc:mysql://cardb.clnm8zsvchg3.us-east-2.rds.amazonaws.com:3306";
@@ -71,9 +71,9 @@ public class AddWatchlist implements RequestStreamHandler {
     	    Statement stmt = conn.createStatement();
     	    
     	    //	Add new car
-    	    String newWatchlist = String.format("INSERT INTO innodb.Watchlist (VIN, user_name)"
-    	    		+ " VALUES ('%s', '%s')",
-    	    		VIN, user_name);
+    	    String newWatchlist = String.format("INSERT INTO innodb.Watchlist (userId, carId)"
+    	    		+ " VALUES (%d, %d)",
+    	    		userId, carId);
     	    stmt.executeUpdate(newWatchlist);
     	    
     	    stmt.close();
