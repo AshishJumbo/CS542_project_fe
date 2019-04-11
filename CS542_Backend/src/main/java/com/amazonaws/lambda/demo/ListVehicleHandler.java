@@ -66,7 +66,7 @@ public class ListVehicleHandler implements RequestStreamHandler {
     	    Statement stmt = conn.createStatement();
     	    
     	    //	Add new car
-    	    String listVehicle = "select car.id, car.year, make.name, car.makeId, model.name, car.modelId, trim.name, car.trimId, car.price, car.mile, car.desc, user.email\n" + 
+    	    String listVehicle = "select car.id, car.year, make.name, car.makeId, model.name, car.modelId, trim.name, car.trimId, car.price, car.mile, car.description, user.email\n" +
     	    		"from innodb.Car as car\n" + 
     	    		"inner join innodb.Make as make on car.makeId = make.id\n" + 
     	    		"inner join innodb.Model as model on car.modelId = model.id\n" + 

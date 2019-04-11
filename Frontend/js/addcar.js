@@ -22,7 +22,12 @@ $("#next").click(function(){
 	document.getElementById("detailed-info-content").style.display = "block";
     document.getElementById("basic-info-content").style.display = "none";
     return false;
-})
+});
+$("#prev").click(function(){
+    document.getElementById("detailed-info-content").style.display = "none";
+    document.getElementById("basic-info-content").style.display = "block";
+    return false;
+});
 
 $(document).ready(function(){
 

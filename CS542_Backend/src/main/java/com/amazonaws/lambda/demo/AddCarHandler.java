@@ -110,7 +110,7 @@ public class AddCarHandler implements RequestStreamHandler {
     	    Statement stmt = conn.createStatement();
     	    
     	    //	Add new car
-    	    String newCar = String.format("INSERT INTO innodb.Car (year, makeId, modelId, trimId, vin, mile, color, price, desc, userId)"
+    	    String newCar = String.format("INSERT INTO innodb.Car (year, makeId, modelId, trimId, vin, mile, color, price, description, userId)"
     	    		+ " VALUES (%d, %d, %d, %d, '%s', %d, '%s', %d, '%s', %d)",
     	    		year, makeId, modelId, trimId, vin, mile, color, price, desc, userId);
     	    stmt.executeUpdate(newCar);
