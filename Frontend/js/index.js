@@ -179,7 +179,7 @@ $(document).ready(function(){
 			let filter_values = Object.keys(filter_global[filters[k]]);
 			$("#"+filters[k]).html("");
 			for (let l=0; l<filter_values.length; l++){
-				$("#"+filters[k]).append('<div class="checkbox list-group-item"><label><input type="checkbox" value="'+filter_values[l]+'" id="'+filter_values[l]+'-filter-id">'+filter_values[l]+' ('+ filter_global[filters[k]][filter_values[l]] +') </label></div>');
+				$("#"+filters[k]).append('<div class="checkbox list-group-item"><label><input type="checkbox" value="'+filter_values[l]+'" id="'+filter_values[l]+'-filter-id"> &nbsp; '+filter_values[l]+' ('+ filter_global[filters[k]][filter_values[l]] +') </label></div>');
 			}
 		}
 	}
