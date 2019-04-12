@@ -92,7 +92,8 @@ public class GetSelllist implements RequestStreamHandler {
                 vehicle.put("mile", resultSet.getInt("car.mile"));
                 vehicle.put("color", resultSet.getString("car.color"));
                 vehicle.put("price", resultSet.getInt("car.price"));
-                vehicle.put("desc", resultSet.getString("car.description"));
+                vehicle.put("description", resultSet.getString("car.description"));
+                vehicle.put("date", resultSet.getString("car.date"));
                 vehicleList.add(vehicle);
             }
 

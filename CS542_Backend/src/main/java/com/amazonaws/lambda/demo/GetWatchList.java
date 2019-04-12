@@ -75,14 +75,12 @@ public class GetWatchList implements RequestStreamHandler {
 
             //	Add new car
             String listVehicle = String.format("select car.id, car.year, car.makeId, make.name, car.modelId, model.name, car.trimId, trim.name,\n" +
-                    "car.vin, car.mile, car.color, car.price, car.description\n" +
-                    "from (select watchlist.carId\n" +
-                    "		from innodb.Watchlist as watchlist\n" +
-                    "		where watchlist.userId = '%d') as temp1\n" +
+                    "car.vin, car.mile, car.color, car.price, car.description, car.date\n" +
+                    "from (select watchlist.carId from innodb.Watchlist as watchlist where watchlist.userId = '%d') as temp1\n" +
                     "inner join innodb.Car as car on temp1.carId = car.id\n" +
                     "inner join innodb.Make as make on car.makeId = make.id\n" +
                     "inner join innodb.Model as model on car.modelId = model.id\n" +
-                    "inner join innodb.Trim as trim on car.trimId = trim.id where car.isSold=0", userId);
+                    "inner join innodb.Trim as trim on car.trimId = trim.id", userId);
             ResultSet resultSet = stmt.executeQuery(listVehicle);
 
             JSONArray vehicleList = new JSONArray();
@@ -100,7 +98,8 @@ public class GetWatchList implements RequestStreamHandler {
                 vehicle.put("mile", resultSet.getInt("car.mile"));
                 vehicle.put("price", resultSet.getInt("car.price"));
                 vehicle.put("color", resultSet.getString("car.color"));
-                vehicle.put("desc", resultSet.getString("car.description"));
+                vehicle.put("date", resultSet.getString("car.date"));
+                vehicle.put("description", resultSet.getString("car.description"));
                 vehicleList.add(vehicle);
             }
 
