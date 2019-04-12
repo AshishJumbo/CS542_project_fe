@@ -98,3 +98,17 @@
 .row_custom_info{
   padding: 2vmin 0 0 0;
 }
+
+.container-fluid{
+  padding-top: 3.5vmin;
+}
+
+#wrapper label{
+  float: right;
+  width: 90%;
+  margin: 0;
+}
+
+#wrapper a {
+  color: black;
+}

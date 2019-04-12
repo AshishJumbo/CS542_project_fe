@@ -1,3 +1,7 @@
+// add upload image functionality for the userId
+// UML model designs
+// lambda functions 
+
 $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");

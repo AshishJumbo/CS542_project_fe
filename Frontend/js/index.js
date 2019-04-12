@@ -3,11 +3,22 @@
 let data = {
 	'cars' : []
 }
+var data_global;
+var filter_global;
+let filters = ['make', 'model', 'color'];
 
 let imglnk = "http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg";
+var sample_response = {
+  "isBase64Encoded": false,
+  "body": "{\"input\":\"{}\",\"vehicleList\":\"{\\\"vehicles\\\":[{\\\"makeId\\\":\\\"3\\\",\\\"trim\\\":\\\"Sport\\\",\\\"trimId\\\":\\\"1\\\",\\\"year\\\":\\\"2019\\\",\\\"modelId\\\":\\\"7\\\",\\\"price\\\":\\\"35000\\\",\\\"mile\\\":4000,\\\"description\\\":\\\"Please contact me if you are interested\\\",\\\"model\\\":\\\"MX-5\\\",\\\"make\\\":\\\"Mazda\\\",\\\"email\\\":\\\"kshao2@wpi.edu\\\",\\\"carId\\\":\\\"3\\\"},{\\\"makeId\\\":\\\"1\\\",\\\"trim\\\":\\\"Hybrid\\\",\\\"trimId\\\":\\\"12\\\",\\\"year\\\":\\\"2015\\\",\\\"modelId\\\":\\\"2\\\",\\\"price\\\":\\\"29987\\\",\\\"mile\\\":29938,\\\"description\\\":\\\"A bargain. Please contact me for more information!\\\",\\\"model\\\":\\\"Camry\\\",\\\"make\\\":\\\"Toyota\\\",\\\"email\\\":\\\"wlm3@wpi.edu\\\",\\\"carId\\\":\\\"4\\\"},{\\\"makeId\\\":\\\"1\\\",\\\"trim\\\":\\\"Limited\\\",\\\"trimId\\\":\\\"16\\\",\\\"year\\\":\\\"2014\\\",\\\"modelId\\\":\\\"2\\\",\\\"price\\\":\\\"25699\\\",\\\"mile\\\":46771,\\\"description\\\":\\\"Contact ackme@wpi.edu plz.\\\",\\\"model\\\":\\\"Camry\\\",\\\"make\\\":\\\"Toyota\\\",\\\"email\\\":\\\"wlm5@wpi.edu\\\",\\\"carId\\\":\\\"6\\\"},{\\\"makeId\\\":\\\"4\\\",\\\"trim\\\":\\\"EX-L\\\",\\\"trimId\\\":\\\"9\\\",\\\"year\\\":\\\"2008\\\",\\\"modelId\\\":\\\"10\\\",\\\"price\\\":\\\"20199\\\",\\\"mile\\\":92039,\\\"description\\\":\\\"A nice car, it runs perfectly and the brake pads are new. Please let me know if you are interested. erk3@wpi.edu\\\",\\\"model\\\":\\\"Accord\\\",\\\"make\\\":\\\"Honda\\\",\\\"email\\\":\\\"test.wpi.edu\\\",\\\"carId\\\":\\\"7\\\"},{\\\"makeId\\\":\\\"4\\\",\\\"trim\\\":\\\"EX\\\",\\\"trimId\\\":\\\"7\\\",\\\"year\\\":\\\"2003\\\",\\\"modelId\\\":\\\"10\\\",\\\"price\\\":\\\"8700\\\",\\\"mile\\\":100392,\\\"description\\\":\\\"You can contact brm12@wpi.edu for testdrive.\\\",\\\"model\\\":\\\"Accord\\\",\\\"make\\\":\\\"Honda\\\",\\\"email\\\":\\\"admin@wpi-car.com\\\",\\\"carId\\\":\\\"8\\\"}]}\"}",
+  "statusCode": "200"
+};
 
 $(document).ready(function(){
 	// var json = jQuery.parseJSON( sample_response.body );
+
+	var json = JSON.parse(sample_response.body);
+	console.log(json);
 
 	console.log("log from index2.js");
 	let cars = data.cars;
@@ -85,8 +96,11 @@ $(document).ready(function(){
 		// url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
 
     success: function (data, status) {
+			data_global = JSON.parse(JSON.parse(data.body).vehicleList);
+			data_global = data_global.vehicles;
       console.log(data);
-			populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));
+			populateResponse(data_global);
+			setupFilterInformation(data_global);
     },
     complete: function () {
       console.log("Post request made to server");
@@ -99,8 +113,7 @@ $(document).ready(function(){
     }
   });
 
-	function populateResponse (data){
-		cars = data.vehicles;
+	function populateResponse (cars){
 		$carsContainer.html("");
 		for( let i = 0; i < cars.length; i++){
 			let car = cars[i];
@@ -140,5 +153,56 @@ $(document).ready(function(){
 			}
 		});
 	}
+
+	function setupFilterInformation(cars){
+		filter_global = {};
+		var filter;
+		for(let i=0; i<filters.length; i++){
+			filter = filters[i];
+			filter_global[filter] = [];
+		}
+
+		for(let j=0; j<cars.length; j++){
+			let car = cars[j];
+			for (var i = 0; i < filters.length; i++) {
+				let filter = filters[i];
+				if(!filter_global[filter].hasOwnProperty(car[filter])){
+					filter_global[filter][car[filter]] = 1;
+				} else {
+					filter_global[filter][car[filter]]++;
+				}
+			}
+		}
+
+
+		for(let k=0; k< filters.length; k++){
+			let filter_values = Object.keys(filter_global[filters[k]]);
+			$("#"+filters[k]).html("");
+			for (let l=0; l<filter_values.length; l++){
+				$("#"+filters[k]).append('<div class="checkbox list-group-item"><label><input type="checkbox" value="'+filter_values[l]+'" id="'+filter_values[l]+'-filter-id">'+filter_values[l]+' ('+ filter_global[filters[k]][filter_values[l]] +') </label></div>');
+			}
+		}
+	}
+
+	$("#honda-filter-id").click(function(){
+	var temp_data = [];
+		for(let i = 0; i< data_global.length; i++){
+			let car = data_global[i];
+			console.log(car);
+			if (car.make == "Honda"){
+				temp_data.push(car);
+			}
+		}
+		populateResponse(temp_data);
+	});
+	$("#undo-filder-id").click(function(){
+		populateResponse(data_global);
+	});
+
+	$('.list-group-item').on('click', function() {
+		 $('.glyphicon', this)
+			 .toggleClass('glyphicon-chevron-right')
+			 .toggleClass('glyphicon-chevron-down');
+	 });
 
 });

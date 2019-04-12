@@ -27,12 +27,38 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Search Filters </div>
       <div class="list-group list-group-flush">
-        <a href="#" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+        <!-- <a href="#" class="list-group-item list-group-item-action bg-light">Dashboard</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Shortcuts</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Overview</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Events</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">Status</a>
+        <a href="#" class="list-group-item list-group-item-action bg-light">Status</a> -->
+
+            <a href="#make" class="list-group-item" data-toggle="collapse">
+              <i class="glyphicon glyphicon-chevron-right"></i>Make
+            </a>
+            <div class="list-group collapse" id="make">
+              <div class="checkbox list-group-item"><label><input type="checkbox" value="honda" id="honda-filter-id">Honda</label></div>
+              <div class="checkbox list-group-item"><label><input type="checkbox" value="toyota" id="toyota-filter-id">Toyota</label></div>
+              <div class="checkbox list-group-item"><label><input type="checkbox" value="subaru" id="subaru-filter-id">Subaru</label></div>
+            </div>
+            <a href="#model" class="list-group-item" data-toggle="collapse">
+              <i class="glyphicon glyphicon-chevron-right"></i>Model
+            </a>
+            <div class="list-group collapse" id="model">
+              <a href="#" class="list-group-item" data-toggle="collapse">Camry</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">Corolla</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">Highlander</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">Supra</a>
+            </div>
+            <a href="#color" class="list-group-item" data-toggle="collapse">
+              <i class="glyphicon glyphicon-chevron-right"></i>Color
+            </a>
+            <div class="list-group collapse" id="color">
+              <a href="#" class="list-group-item" data-toggle="collapse">Pink</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">White</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">Red</a>
+            </div>
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
