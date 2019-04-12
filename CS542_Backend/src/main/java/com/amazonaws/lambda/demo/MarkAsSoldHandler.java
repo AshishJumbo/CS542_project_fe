@@ -1,23 +1,15 @@
 package com.amazonaws.lambda.demo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class MarkAsSoldHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
@@ -38,9 +30,9 @@ public class MarkAsSoldHandler implements RequestStreamHandler {
             JSONObject event = (JSONObject) parser.parse(reader);
             logger.log(event.toString());
             if (event.get("carId") != null) {
-                userId = Integer.parseInt((String) event.get("carId"));
+                carId = Integer.parseInt((String) event.get("carId"));
             }
-            if (userId == -1 || carId == -1) {
+            if (carId == -1 || carId == -1) {
                 throw new Exception("Invalid input to mark car as sold from car list");
             }
 
