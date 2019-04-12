@@ -19,7 +19,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
-public class GetSelllist implements RequestStreamHandler {
+public class MarkAsSoldHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
 
     @Override
@@ -31,21 +31,23 @@ public class GetSelllist implements RequestStreamHandler {
         JSONObject responseJson = new JSONObject();
         String responseCode = "200";
 
-        int userId = 0;
+        // default
+        int carId = -1;
 
         try {
             JSONObject event = (JSONObject) parser.parse(reader);
             logger.log(event.toString());
-            if (event.get("userId") != null) {
-                userId = Integer.parseInt((String) event.get("userId"));
+            if (event.get("carId") != null) {
+                userId = Integer.parseInt((String) event.get("carId"));
+            }
+            if (userId == -1 || carId == -1) {
+                throw new Exception("Invalid input to mark car as sold from car list");
             }
 
-            JSONObject vehicleList = getSelllist(userId, context);
+            markAsSold(carId, context);
 
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
-            responseBody.put("vehicleList", vehicleList.toString());
-
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
             responseJson.put("body", responseBody.toString());
@@ -61,7 +63,7 @@ public class GetSelllist implements RequestStreamHandler {
         writer.close();
     }
 
-    private JSONObject getSelllist(int userId, Context context) {
+    private void markAsSold(int carId, Context context) {
         LambdaLogger logger = context.getLogger();
         JSONObject rs = new JSONObject();
         try {
@@ -73,33 +75,10 @@ public class GetSelllist implements RequestStreamHandler {
             Connection conn = DriverManager.getConnection(url, username, dbpassword);
             Statement stmt = conn.createStatement();
 
-            //	Add new car
-            String listVehicle = String.format(
-                    "select car.id, car.year, make.name, model.name, trim.name, car.vin, car.mile, car.color, car.price, car.description, car.date" +
-                            " from innodb.Car as car inner join innodb.Make as make on car.makeId = make.id inner join innodb.Model as model on car.modelId = model.id inner join innodb.Trim as trim on car.trimId = trim.id " +
-                            " where car.userId = '%d' and car.isSold = 0", userId);
-            ResultSet resultSet = stmt.executeQuery(listVehicle);
+            //	update statement
+            String update = String.format("UPDATE innodb.Car SET isSold = 1 WHERE id = '%d';", carId);
+            stmt.executeUpdate(update);
 
-            JSONArray vehicleList = new JSONArray();
-            while (resultSet.next()) {
-                JSONObject vehicle = new JSONObject();
-                vehicle.put("carId", resultSet.getString("car.id"));
-                vehicle.put("year", resultSet.getString("car.year"));
-                vehicle.put("make", resultSet.getString("make.name"));
-                vehicle.put("model", resultSet.getString("model.name"));
-                vehicle.put("trim", resultSet.getString("trim.name"));
-                vehicle.put("vin", resultSet.getString("car.vin"));
-                vehicle.put("mile", resultSet.getInt("car.mile"));
-                vehicle.put("color", resultSet.getString("car.color"));
-                vehicle.put("price", resultSet.getInt("car.price"));
-                vehicle.put("description", resultSet.getString("car.description"));
-                vehicle.put("date", resultSet.getString("car.date"));
-                vehicleList.add(vehicle);
-            }
-
-            rs.put("vehicles", vehicleList);
-
-            resultSet.close();
 
             stmt.close();
             conn.close();
@@ -109,7 +88,6 @@ public class GetSelllist implements RequestStreamHandler {
             logger.log("Caught exception: " + e.getMessage());
             logger.log("" + e.getStackTrace()[0].getLineNumber());
         }
-        return rs;
     }
 
 }

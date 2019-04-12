@@ -19,7 +19,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
-public class GetSelllist implements RequestStreamHandler {
+public class GetModelHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
 
     @Override
@@ -31,20 +31,20 @@ public class GetSelllist implements RequestStreamHandler {
         JSONObject responseJson = new JSONObject();
         String responseCode = "200";
 
-        int userId = 0;
+        int makeId = -1;
 
         try {
             JSONObject event = (JSONObject) parser.parse(reader);
             logger.log(event.toString());
-            if (event.get("userId") != null) {
-                userId = Integer.parseInt((String) event.get("userId"));
+            if (event.get("makeId") != null) {
+                makeId = Integer.parseInt((String) event.get("makeId"));
             }
 
-            JSONObject vehicleList = getSelllist(userId, context);
+            JSONObject modelList = getModelList(makeId, context);
 
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
-            responseBody.put("vehicleList", vehicleList.toString());
+            responseBody.put("modelList", modelList.toString());
 
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
@@ -61,7 +61,7 @@ public class GetSelllist implements RequestStreamHandler {
         writer.close();
     }
 
-    private JSONObject getSelllist(int userId, Context context) {
+    private JSONObject getModelList(int makeId, Context context) {
         LambdaLogger logger = context.getLogger();
         JSONObject rs = new JSONObject();
         try {
@@ -73,31 +73,19 @@ public class GetSelllist implements RequestStreamHandler {
             Connection conn = DriverManager.getConnection(url, username, dbpassword);
             Statement stmt = conn.createStatement();
 
-            //	Add new car
-            String listVehicle = String.format(
-                    "select car.id, car.year, make.name, model.name, trim.name, car.vin, car.mile, car.color, car.price, car.description, car.date" +
-                            " from innodb.Car as car inner join innodb.Make as make on car.makeId = make.id inner join innodb.Model as model on car.modelId = model.id inner join innodb.Trim as trim on car.trimId = trim.id " +
-                            " where car.userId = '%d' and car.isSold = 0", userId);
-            ResultSet resultSet = stmt.executeQuery(listVehicle);
+            String query = String.format(
+                    "select * from innodb.Model as model where model.id in (select mid.modelId from innodb.Make_Model as mid where mid.makeId='%d');", makeId);
+            ResultSet resultSet = stmt.executeQuery(query);
 
-            JSONArray vehicleList = new JSONArray();
+            JSONArray modelList = new JSONArray();
             while (resultSet.next()) {
-                JSONObject vehicle = new JSONObject();
-                vehicle.put("carId", resultSet.getString("car.id"));
-                vehicle.put("year", resultSet.getString("car.year"));
-                vehicle.put("make", resultSet.getString("make.name"));
-                vehicle.put("model", resultSet.getString("model.name"));
-                vehicle.put("trim", resultSet.getString("trim.name"));
-                vehicle.put("vin", resultSet.getString("car.vin"));
-                vehicle.put("mile", resultSet.getInt("car.mile"));
-                vehicle.put("color", resultSet.getString("car.color"));
-                vehicle.put("price", resultSet.getInt("car.price"));
-                vehicle.put("description", resultSet.getString("car.description"));
-                vehicle.put("date", resultSet.getString("car.date"));
-                vehicleList.add(vehicle);
+                JSONObject model = new JSONObject();
+                model.put("modelId", resultSet.getString("model.id"));
+                model.put("modelName", resultSet.getString("model.name"));
+                modelList.add(model);
             }
 
-            rs.put("vehicles", vehicleList);
+            rs.put("models", modelList);
 
             resultSet.close();
 

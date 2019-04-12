@@ -19,7 +19,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
-public class GetSelllist implements RequestStreamHandler {
+public class GetTrimHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
 
     @Override
@@ -31,20 +31,20 @@ public class GetSelllist implements RequestStreamHandler {
         JSONObject responseJson = new JSONObject();
         String responseCode = "200";
 
-        int userId = 0;
+        int modelId = -1;
 
         try {
             JSONObject event = (JSONObject) parser.parse(reader);
             logger.log(event.toString());
-            if (event.get("userId") != null) {
-                userId = Integer.parseInt((String) event.get("userId"));
+            if (event.get("modelId") != null) {
+                modelId = Integer.parseInt((String) event.get("modelId"));
             }
 
-            JSONObject vehicleList = getSelllist(userId, context);
+            JSONObject trimList = getTrimList(modelId, context);
 
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
-            responseBody.put("vehicleList", vehicleList.toString());
+            responseBody.put("trimList", trimList.toString());
 
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
@@ -61,7 +61,7 @@ public class GetSelllist implements RequestStreamHandler {
         writer.close();
     }
 
-    private JSONObject getSelllist(int userId, Context context) {
+    private JSONObject getTrimList(int modelId, Context context) {
         LambdaLogger logger = context.getLogger();
         JSONObject rs = new JSONObject();
         try {
@@ -73,31 +73,19 @@ public class GetSelllist implements RequestStreamHandler {
             Connection conn = DriverManager.getConnection(url, username, dbpassword);
             Statement stmt = conn.createStatement();
 
-            //	Add new car
-            String listVehicle = String.format(
-                    "select car.id, car.year, make.name, model.name, trim.name, car.vin, car.mile, car.color, car.price, car.description, car.date" +
-                            " from innodb.Car as car inner join innodb.Make as make on car.makeId = make.id inner join innodb.Model as model on car.modelId = model.id inner join innodb.Trim as trim on car.trimId = trim.id " +
-                            " where car.userId = '%d' and car.isSold = 0", userId);
-            ResultSet resultSet = stmt.executeQuery(listVehicle);
+            String query = String.format(
+                    "select * from innodb.Trim as trim where trim.id in (select mid.trimId from innodb.Model_Trim as mid where mid.modelId='%d');", modelId);
+            ResultSet resultSet = stmt.executeQuery(query);
 
-            JSONArray vehicleList = new JSONArray();
+            JSONArray trimList = new JSONArray();
             while (resultSet.next()) {
-                JSONObject vehicle = new JSONObject();
-                vehicle.put("carId", resultSet.getString("car.id"));
-                vehicle.put("year", resultSet.getString("car.year"));
-                vehicle.put("make", resultSet.getString("make.name"));
-                vehicle.put("model", resultSet.getString("model.name"));
-                vehicle.put("trim", resultSet.getString("trim.name"));
-                vehicle.put("vin", resultSet.getString("car.vin"));
-                vehicle.put("mile", resultSet.getInt("car.mile"));
-                vehicle.put("color", resultSet.getString("car.color"));
-                vehicle.put("price", resultSet.getInt("car.price"));
-                vehicle.put("description", resultSet.getString("car.description"));
-                vehicle.put("date", resultSet.getString("car.date"));
-                vehicleList.add(vehicle);
+                JSONObject trim = new JSONObject();
+                trim.put("trimId", resultSet.getString("trim.id"));
+                trim.put("trimName", resultSet.getString("trim.name"));
+                trimList.add(trim);
             }
 
-            rs.put("vehicles", vehicleList);
+            rs.put("trims", trimList);
 
             resultSet.close();
 

@@ -19,7 +19,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 
-public class GetSelllist implements RequestStreamHandler {
+public class ListFeatureHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
 
     @Override
@@ -31,20 +31,20 @@ public class GetSelllist implements RequestStreamHandler {
         JSONObject responseJson = new JSONObject();
         String responseCode = "200";
 
-        int userId = 0;
+        int trimId = -1;
 
         try {
             JSONObject event = (JSONObject) parser.parse(reader);
             logger.log(event.toString());
-            if (event.get("userId") != null) {
-                userId = Integer.parseInt((String) event.get("userId"));
+            if (event.get("trimId") != null) {
+                trimId = Integer.parseInt((String) event.get("trimId"));
             }
 
-            JSONObject vehicleList = getSelllist(userId, context);
+            JSONObject featureList = listFeatures(trimId, context);
 
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toString());
-            responseBody.put("vehicleList", vehicleList.toString());
+            responseBody.put("featureList", featureList.toString());
 
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
@@ -61,7 +61,7 @@ public class GetSelllist implements RequestStreamHandler {
         writer.close();
     }
 
-    private JSONObject getSelllist(int userId, Context context) {
+    private JSONObject listFeatures(int trimId, Context context) {
         LambdaLogger logger = context.getLogger();
         JSONObject rs = new JSONObject();
         try {
@@ -69,35 +69,24 @@ public class GetSelllist implements RequestStreamHandler {
             String username = "calcAdmin";
             String dbpassword = "rootmasterpassword";
 
-//    	    Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, username, dbpassword);
             Statement stmt = conn.createStatement();
 
-            //	Add new car
-            String listVehicle = String.format(
-                    "select car.id, car.year, make.name, model.name, trim.name, car.vin, car.mile, car.color, car.price, car.description, car.date" +
-                            " from innodb.Car as car inner join innodb.Make as make on car.makeId = make.id inner join innodb.Model as model on car.modelId = model.id inner join innodb.Trim as trim on car.trimId = trim.id " +
-                            " where car.userId = '%d' and car.isSold = 0", userId);
-            ResultSet resultSet = stmt.executeQuery(listVehicle);
+            //	Query for features under the trim id
+            String query = String.format("select feature.name, mid.trimId, feature.id from innodb.Feature as feature inner join innodb.Trim_Feature as mid on mid.featureId=feature.id where mid.trimId='%d';", trimId);
+            ResultSet resultSet = stmt.executeQuery(query);
+            logger.log(resultSet.toString());
 
-            JSONArray vehicleList = new JSONArray();
+            JSONArray featureList = new JSONArray();
             while (resultSet.next()) {
-                JSONObject vehicle = new JSONObject();
-                vehicle.put("carId", resultSet.getString("car.id"));
-                vehicle.put("year", resultSet.getString("car.year"));
-                vehicle.put("make", resultSet.getString("make.name"));
-                vehicle.put("model", resultSet.getString("model.name"));
-                vehicle.put("trim", resultSet.getString("trim.name"));
-                vehicle.put("vin", resultSet.getString("car.vin"));
-                vehicle.put("mile", resultSet.getInt("car.mile"));
-                vehicle.put("color", resultSet.getString("car.color"));
-                vehicle.put("price", resultSet.getInt("car.price"));
-                vehicle.put("description", resultSet.getString("car.description"));
-                vehicle.put("date", resultSet.getString("car.date"));
-                vehicleList.add(vehicle);
+                JSONObject feature = new JSONObject();
+                feature.put("featureId", resultSet.getString("feature.id"));
+                feature.put("featureName", resultSet.getString("feature.name"));
+                feature.put("trimId", resultSet.getString("trim.id"));
+                featureList.add(feature);
             }
 
-            rs.put("vehicles", vehicleList);
+            rs.put("features", featureList);
 
             resultSet.close();
 
