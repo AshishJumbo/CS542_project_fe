@@ -130,12 +130,12 @@ $(document).ready(function(){
 											' Year :  '+car.year+'<br/>'+
 											' Mileage :  '+car.mile+
 											'<button class="car_purchase_button">Buy</button>'+
-											'<button class="car_more_info_button" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">More Info</button>'+
+											'<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info'+i+'" aria-expanded="false" aria-controls="info'+i+'">More Info</button>'+
 									'</div>'+
 							'</div>'+
 							'<div class="row row_custom_info">'+
 								'<div class="col">'+
-									'<div class="collapse multi-collapse" id="multiCollapseExample1">'+
+									'<div class="collapse multi-collapse" id="info'+i+'">'+
 										'<div class="card card-body">'+
 											' Description :  '+car.description +'<br/>'+
 											' Contact Info :  '+car.email +'<br/>'+
