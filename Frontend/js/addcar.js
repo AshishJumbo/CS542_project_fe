@@ -32,6 +32,10 @@ $("#create-new-listing").click(function () {
     add_car_DB(values);
     // return false;
 });
+
+$("#makeId").click(function(){
+    $(this).children().html("LOL");
+});
 $("#next").click(function () {
     document.getElementById("detailed-info-content").style.display = "block";
     document.getElementById("basic-info-content").style.display = "none";
@@ -43,6 +47,17 @@ $("#prev").click(function () {
     return false;
 });
 
+function get_make_DB(data) {
+    $.ajax({
+        type: 'GET',
+        data: JSON.stringify(data),
+        crossDomain: true,
+        contentType: 'application/json',
+        dataType: 'json',
+        url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getmake',
+
+    })
+}
 function add_car_DB(data) {
     $.ajax({
         type: 'POST',

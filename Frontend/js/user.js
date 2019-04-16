@@ -27,14 +27,14 @@ $(document).ready(function(){
     var json = JSON.parse(sample_response.body);
     console.log(json);
 
-    console.log("log from index2.js");
+    console.log("log from user.js");
     let cars = data.cars;
     console.log(cars.length);
     $selllistContainer = $("#selllist").html('<h1 class="mt-4">Sell List</h1>');
     $watchlistContainer = $("#watchlist").html('<h1 class="mt-4">Watch List</h1>');
 
     let divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> '+
-        '<img class="car_info_image" src="http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg">'+
+        '<img class="car_info_image" src=imglnk>'+
         '<div class="car_info_details align-middle">'+
         'image of car <br/>'+
         'description of car <br/>'+
@@ -115,6 +115,7 @@ $(document).ready(function(){
                 '<div class="row">'+
                 '<img class="car_info_image" src="'+imglnk+'">'+
                 '<div class="car_info_details align-middle">'+
+                ' Owner :  '+car.userId +'<br/>'+
                 ' Make :  '+car.make +'<br/>'+
                 ' Model :  '+car.model+'<br/>'+
                 ' Price :  '+car.price+'<br/>'+
