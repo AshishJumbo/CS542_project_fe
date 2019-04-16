@@ -40,7 +40,7 @@ $(document).ready(function(){
     var json = JSON.parse(sample_response.body);
     console.log(json);
 
-    console.log("log from index2.js");
+    console.log("log from user.js");
     let cars = data.cars;
     console.log(cars.length);
     let $selllistContainer = $("#selllist").html('<h1 class="mt-4">Sell List</h1>');
@@ -82,7 +82,11 @@ $(document).ready(function(){
         crossDomain: true,
         contentType: 'application/json',
         dataType: 'json',
+        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
 
+        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
+        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
+        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
         success: function (data, status) {
             console.log(data);
             // populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));

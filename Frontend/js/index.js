@@ -1,3 +1,4 @@
+
 /*assuming data is the reponse we get from the server in json format*/
 $(document).ready(function(){
 		let data = {
@@ -16,10 +17,112 @@ $(document).ready(function(){
 		  "statusCode": "200"
 		};
 
-	// var json = jQuery.parseJSON( sample_response.body );
+// Get the modal
+var modal = document.getElementById('login-modal');
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+};
 
+	$("#modal-cancel").click(function () {
+	    document.getElementById('login-modal').style.display = 'none';
+	});
+	$("#login-modal-open").click(function () {
+	    document.getElementById('login-modal').style.display = 'block'
+	});
+	$("#login-form-submit").click(function () {
+	var $inputs = $('#login-form :input');	
 	var json = JSON.parse(sample_response.body);
 	console.log(json);
+
+	
+    // not sure if you wanted this, but I thought I'd add it.
+    // get an associative array of just the values.
+    var values = {};
+    $inputs.each(function () {
+        values[this.id] = $(this).val();
+    });
+    console.log(values);
+    auth_user(values);
+});
+function auth_user(data){
+    $.ajax({
+        type: 'POST',
+        data: JSON.stringify(data),
+        url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/authenticateuser',
+        crossDomain: true,
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (data) {
+            // Create cookie if login auth success
+            let userId = JSON.parse(data.body);
+            console.log("Returned from Auth_User: "+userId);
+            setCookie("userId",userId,30);
+        },
+        complete: function () {
+            console.log("Login auth post request made to server");
+            $('#login-form').trigger('reset');
+        },
+        error: function (error) {
+            console.log("login post FAIL....=================");
+        }
+    });
+}
+function check_login_status(){
+    let login_cliche ='<a class="dropdown-toggle nav-link" href="#" role="button" id="login-modal-open">Login</a>';
+    let username_cliche = '<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"\n' +
+        '                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Username</a>' +
+        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">\n' +
+        '<a class="dropdown-item" href="user.html">My Account</a>\n' +
+        '<div class="dropdown-divider"></div>\n' +
+        '<a class="dropdown-item" href="#" id="logout_button">Log Out</a>\n' +
+        '</div>';
+    // If not logged in, display "Login" as default
+    $login_status_box = $("#login_status_box").html(login_cliche);
+    // If logged in, display "Username"
+    //checkCookie();
+    var userId = getCookie("userId");
+    if(userId != ""){
+        // Logged in.
+        $login_status_box.html("");
+        $login_status_box.append(username_cliche);
+    }
+}
+function setCookie(cname,cvalue,exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+function checkCookie() {
+    var user=getCookie("userId");
+    if (user != "") {
+        console.log("Welcome again " + user);
+    } else {
+        user = prompt("Please enter your name:","");
+        if (user != "" && user != null) {
+            setCookie("userId", user, 30);
+        }
+    }
+}
+
 
 	console.log("log from index2.js");
 	let cars = data.cars;
@@ -162,8 +265,7 @@ $(document).ready(function(){
 			divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> '+
 							'<div class="row">'+
 								'<img class="car_info_image" src="'+imglnk+'">'+
-								'<img class="add_to_watchlist" src='+addToWatchlist+' />'+
-									'<div class="car_info_details align-middle" data-carId='+ car.carId +'>'+
+									'<div class="car_info_details align-middle">'+
 											' Make :  '+car.make +'<br/>'+
 											' Model :  '+car.model+'<br/>'+
 											' Price :  '+car.price+'<br/>'+
