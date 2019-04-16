@@ -1,14 +1,12 @@
 #list-container{
     display: none;
-    margin: 50px;
 }
 #watchlist-container{
     display: none;
-    margin: 50px;
 }
 #account-details-content{
     display: block;
-    margin: 50px;
+    margin-top: 3.56vmin;
 }
 .bg-info{
     color: #ffeebf;
@@ -112,4 +110,8 @@
 
 .row_custom_info{
     padding: 2vmin 0 0 0;
+}
+
+.navbar-custom{
+  margin-bottom: 2vmin;
 }

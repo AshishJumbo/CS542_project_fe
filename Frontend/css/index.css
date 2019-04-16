@@ -112,3 +112,23 @@
 #wrapper a {
   color: black;
 }
+
+.add_to_watchlist{
+  position: absolute;
+  top: 0%;
+  right: 1%;
+  width: 6%;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10;
+  max-width: 70px;
+}
+
+.add_to_watchlist:hover, .add_to_watchlist:active{
+  filter: drop-shadow(0 0 1px #7AD7F0);
+}
+
+.add_to_watchlist:active{
+  filter: drop-shadow(0 0 1px #7AD7F0);
+  margin-top: 3px;
+}
