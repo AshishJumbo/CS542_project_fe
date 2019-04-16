@@ -37,41 +37,93 @@ $("#login-form-submit").click(function () {
     $inputs.each(function () {
         values[this.id] = $(this).val();
     });
-    values['userId'] = "1";
     console.log(values);
-    add_car_DB(values);
-
+    auth_user(values);
+});
+function auth_user(data){
     $.ajax({
         type: 'POST',
+        data: JSON.stringify(data),
         url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/authenticateuser',
         crossDomain: true,
         contentType: 'application/json',
         dataType: 'json',
-        success: function (data, status) {
-            data_global = JSON.parse(JSON.parse(data.body).vehicleList);
-            data_global = data_global.vehicles;
-            console.log(data);
-            populateResponse(data_global);
-            setupFilterInformation(data_global);
+        success: function (data) {
+            // Create cookie if login auth success
+            let userId = JSON.parse(data.body);
+            console.log("Returned from Auth_User: "+userId);
+            setCookie("userId",userId,30);
         },
         complete: function () {
             console.log("Login auth post request made to server");
+            $('#login-form').trigger('reset');
         },
         error: function (error) {
             console.log("login post FAIL....=================");
         }
     });
-});
-
+}
+function check_login_status(){
+    let login_cliche ='<a class="dropdown-toggle nav-link" href="#" role="button" id="login-modal-open">Login</a>';
+    let username_cliche = '<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"\n' +
+        '                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Username</a>' +
+        '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">\n' +
+        '<a class="dropdown-item" href="user.html">My Account</a>\n' +
+        '<div class="dropdown-divider"></div>\n' +
+        '<a class="dropdown-item" href="#" id="logout_button">Log Out</a>\n' +
+        '</div>';
+    // If not logged in, display "Login" as default
+    $login_status_box = $("#login_status_box").html(login_cliche);
+    // If logged in, display "Username"
+    //checkCookie();
+    var userId = getCookie("userId");
+    if(userId != ""){
+        // Logged in.
+        $login_status_box.html("");
+        $login_status_box.append(username_cliche);
+    }
+}
+function setCookie(cname,cvalue,exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+function checkCookie() {
+    var user=getCookie("userId");
+    if (user != "") {
+        console.log("Welcome again " + user);
+    } else {
+        user = prompt("Please enter your name:","");
+        if (user != "" && user != null) {
+            setCookie("userId", user, 30);
+        }
+    }
+}
 
 $(document).ready(function () {
     // var json = jQuery.parseJSON( sample_response.body );
 
-    var json = JSON.parse(sample_response.body);
-    console.log(json);
+    // var json = JSON.parse(sample_response.body);
+    // console.log(json);
 
-
-    console.log("log from index2.js");
+    console.log("log from index.js");
+    check_login_status(); // Check login cookie
     let cars = data.cars;
     console.log(cars.length);
     $carsContainer = $(".cars-container").html('<h1 class="mt-4">Simple Sidebar</h1>');
@@ -140,11 +192,6 @@ $(document).ready(function () {
         crossDomain: true,
         contentType: 'application/json',
         dataType: 'json',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
-
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
 
         success: function (data, status) {
             data_global = JSON.parse(JSON.parse(data.body).vehicleList);
