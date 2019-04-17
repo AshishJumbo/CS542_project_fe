@@ -8,6 +8,8 @@ $(document).ready(function () {
     let filters = ['make', 'model', 'color'];
     let userId = 1;
 
+    check_login_status();
+
     let imglnk = "http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg";
     var addToWatchlist = "images/add-to-watch2.png";
     var sample_response = {
@@ -26,12 +28,12 @@ $(document).ready(function () {
     };
 
     $("#modal-cancel").click(function () {
-        document.getElementById('login-modal').style.display = 'none';
+        modal.style.display = 'none';
     });
     $("#login-modal-open").click(function () {
-        document.getElementById('login-modal').style.display = 'block'
+        modal.style.display = 'block'
     });
-    $("#login-form-submit").click(function () {
+    $("#login_form_submit").click(function () {
         var $inputs = $('#login-form :input');
         // var json = JSON.parse(sample_response.body);
         console.log("Login-submit: Clicked");
@@ -42,8 +44,14 @@ $(document).ready(function () {
         $inputs.each(function () {
             values[this.id] = $(this).val();
         });
-        console.log("Sent value: "+values);
+        console.log("Sent value: "+values.user_name+" "+values.password);
         auth_user(values);
+    });
+    $("#logout_button").click(function (){
+        console.log("logging out");
+        localStorage.clear();
+        check_login_status();
+
     });
 
     // TODO: T0mi: These 3 functions are required for login in all scripts.
@@ -61,13 +69,15 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (data) {
                 // Create cookie if login auth success
-                let userId = JSON.parse(data.body);
-                console.log("Returned from Auth_User: " + userId);
-                setCookie("userId", userId, 30);
+                let object = JSON.parse(data.body);
+                console.log("Returned from Auth_User: " + object.userId);
+                setItem("userId", object.userId);
             },
             complete: function () {
                 console.log("Login auth post request made to server");
                 $('#login-form').trigger('reset');
+                check_login_status();
+                modal.style.display = 'none';
             },
             error: function (error) {
                 console.log("login post FAIL....=================");
@@ -77,61 +87,36 @@ $(document).ready(function () {
 
     function check_login_status() {
         let login_cliche = '<a class="dropdown-toggle nav-link" href="#" role="button" id="login-modal-open">Login</a>';
-        let username_cliche = '<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"\n' +
-            '                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Account</a>' +
+        let username_cliche = '<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Account</a>' +
             '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">\n' +
             '<a class="dropdown-item" href="user.html">My Garage</a>\n' +
             '<div class="dropdown-divider"></div>\n' +
             '<a class="dropdown-item" href="#" id="logout_button">Log Out</a>\n' +
             '</div>';
         // If not logged in, display "Login" as default
+        console.log("CLS: login_cliche");
         $login_status_box = $("#login_status_box").html(login_cliche);
         // If logged in, display "Username"
-        var userId = getCookie("userId");
-        if (userId != "Fail login") {
+        let userId = getItem("userId");
+        console.log("Read cookie with UserID=" + userId);
+        if (userId != "Fail login" && userId != null) {
             // Logged in.
-            console.log("Read cookie with UserID=" + userId);
+            console.log("CLS: user_name cliche")
             $login_status_box.html("");
             $login_status_box.append(username_cliche);
         }
     }
 
-    function setCookie(cname, cvalue, exdays) {
-        let d = exdays * 24 * 60 * 60 * 1000;
-        let expires = "expires=" + d.toString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    function setItem(cname, cvalue) {
+        localStorage.setItem(cname, cvalue);
     }
 
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
+    function getItem(cname) {
+        return localStorage.getItem(cname);
     }
 
-    // function checkCookie() {
-    //     var user = getCookie("userId");
-    //     if (user != "") {
-    //         console.log("Welcome again " + user);
-    //     } else {
-    //         user = prompt("Please enter your name:", "");
-    //         if (user != "" && user != null) {
-    //             setCookie("userId", user, 30);
-    //         }
-    //     }
-    // }
 
 
-    console.log("log from index2.js");
     let cars = data.cars;
     console.log(cars.length);
     $carsContainer = $(".cars-container");

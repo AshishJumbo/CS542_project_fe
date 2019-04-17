@@ -51,19 +51,41 @@
             <li class="nav-item active">
               <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Username
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="user.html">My Account</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Log Out</a>
-            </div>
+            <li class="nav-item dropdown" id="login_status_box">
+<!--              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"-->
+<!--              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--              Username-->
+<!--            </a>-->
+<!--            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">-->
+<!--              <a class="dropdown-item" href="user.html">My Account</a>-->
+<!--              <div class="dropdown-divider"></div>-->
+<!--              <a class="dropdown-item" href="#">Log Out</a>-->
+<!--            </div>-->
           </li>
         </ul>
       </div>
+          <!-- The Login Modal -->
+          <div id="login-modal" class="modal">
+              <!-- Modal Content -->
+              <form id="login-form" class="modal-content animate">
+
+                  <div class="container">
+                      <label for="user_name"><b>Username</b></label>
+                      <input type="text" placeholder="Enter Username" name="user_name" id="user_name" required>
+
+                      <label for="password"><b>Password</b></label>
+                      <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+                      <button id="login_form_submit" class="fullsize-btn" type="submit">Login</button>
+                  </div>
+
+                  <div class="container" style="background-color:#f1f1f1">
+                      <button id="modal-cancel" type="button" class="fullsize-btn cancelbtn">
+                          Cancel
+                      </button>
+                  </div>
+              </form>
+          </div>
     </nav>
 
         <div class="container-fluid col-md-12 ml-sm-auto col-lg-12 px-4">
