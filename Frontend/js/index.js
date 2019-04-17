@@ -33,11 +33,11 @@ window.onclick = function (event) {
 	    document.getElementById('login-modal').style.display = 'block'
 	});
 	$("#login-form-submit").click(function () {
-	var $inputs = $('#login-form :input');	
+	var $inputs = $('#login-form :input');
 	var json = JSON.parse(sample_response.body);
 	console.log(json);
 
-	
+
     // not sure if you wanted this, but I thought I'd add it.
     // get an associative array of just the values.
     var values = {};
@@ -127,7 +127,8 @@ function checkCookie() {
 	console.log("log from index2.js");
 	let cars = data.cars;
 	console.log(cars.length);
-	$carsContainer = $(".cars-container").html('<h1 class="mt-4">Simple Sidebar</h1>');
+	$carsContainer = $(".cars-container");
+	$carsContainer.html("<img class='pageloading' src='images/loader-spinning.gif' />");
 
 	let divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> '+
 						'<img class="car_info_image" src="http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg">'+
@@ -243,7 +244,7 @@ function checkCookie() {
 				// $dialog_container.hide(0);
 				// $delete_event_dialog.hide(0);
 				// loadCalendarInfo(selected_calendar);
-				getWatchlist();
+				// getWatchlist();
 			},
 			error: function (error) {
 				console.log("FAIL....=================");

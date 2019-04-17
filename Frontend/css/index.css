@@ -243,3 +243,10 @@ button:hover {
   filter: drop-shadow(0 0 1px #7AD7F0);
   margin-top: 3px;
 }
+
+.pageloading{
+  position: relative;
+  left: 50%;
+  width: 30%;
+  transform: translateX(-50%);
+}
