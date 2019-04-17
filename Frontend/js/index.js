@@ -222,7 +222,7 @@ $(document).ready(function () {
                 '<div class="row">' +
                 '<img class="car_info_image" src="' + imglnk + '">' +
                 '<div class="car_info_details align-middle">' +
-                ' Owner :  ' + car.userId + '<br/>' +
+                ' Owner :  ' + car.userName + '<br/>' +
                 ' Make :  ' + car.make + '<br/>' +
                 ' Model :  ' + car.model + '<br/>' +
                 ' Price :  $' + car.price + '<br/>' +
