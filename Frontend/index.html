@@ -3,58 +3,64 @@
 
 <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <title>WPI Cars - Find your next ride!</title>
+  <title>WPI Cars - Find your next ride!</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="css/simple-sidebar.css" rel="stylesheet">
-    <link href="css/index.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="css/simple-sidebar.css" rel="stylesheet">
+  <link href="css/index.css" rel="stylesheet">
 
 </head>
 
 <body>
 
-
-<div class="d-flex" id="wrapper">
-
-
+  <div class="d-flex" id="wrapper">
 
     <!-- Sidebar -->
     <div class="bg-light border-right" id="sidebar-wrapper">
-        <div class="sidebar-heading">Search Filters</div>
-        <div class="list-group list-group-flush">
-
+      <div class="list-group list-group-flush sticky-top">
+            <div class="sidebar-heading">Search Filters </div>
             <a href="#make" class="list-group-item" data-toggle="collapse">
-                <i class="glyphicon glyphicon-chevron-right"></i>Make
+              <i class="glyphicon glyphicon-chevron-right"></i>Make
             </a>
             <div class="list-group collapse" id="make">
+              <div class="checkbox list-group-item"><label><input type="checkbox" value="honda" id="honda-filter-id">Honda</label></div>
+              <div class="checkbox list-group-item"><label><input type="checkbox" value="toyota" id="toyota-filter-id">Toyota</label></div>
+              <div class="checkbox list-group-item"><label><input type="checkbox" value="subaru" id="subaru-filter-id">Subaru</label></div>
             </div>
             <a href="#model" class="list-group-item" data-toggle="collapse">
-                <i class="glyphicon glyphicon-chevron-right"></i>Model
+              <i class="glyphicon glyphicon-chevron-right"></i>Model
             </a>
             <div class="list-group collapse" id="model">
+              <a href="#" class="list-group-item" data-toggle="collapse">Camry</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">Corolla</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">Highlander</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">Supra</a>
             </div>
             <a href="#color" class="list-group-item" data-toggle="collapse">
-                <i class="glyphicon glyphicon-chevron-right"></i>Color
+              <i class="glyphicon glyphicon-chevron-right"></i>Color
             </a>
             <div class="list-group collapse" id="color">
+              <a href="#" class="list-group-item" data-toggle="collapse">Pink</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">White</a>
+              <a href="#" class="list-group-item" data-toggle="collapse">Red</a>
             </div>
-        </div>
+      </div>
     </div>
     <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-            <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+        <nav class="navbar navbar-fixed-top navbar-expand-lg navbar-light bg-light border-bottom sticky-top">
+          <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,22 +126,22 @@
     </div>
     <!-- /#page-content-wrapper -->
 
-</div>
-<!-- /#wrapper -->
+  </div>
+  <!-- /#wrapper -->
 
-<!-- Bootstrap core JavaScript -->
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/index.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/index.js"></script>
 
 
-<!-- Menu Toggle Script -->
-<script>
-    $("#menu-toggle").click(function (e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
+  <!-- Menu Toggle Script -->
+  <script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
     });
-</script>
+  </script>
 
 </body>
 
