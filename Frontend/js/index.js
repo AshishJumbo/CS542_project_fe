@@ -33,7 +33,7 @@ window.onclick = function (event) {
 	    document.getElementById('login-modal').style.display = 'block'
 	});
 	$("#login-form-submit").click(function () {
-	var $inputs = $('#login-form :input');	
+	var $inputs = $('#login-form :input');
 	var json = JSON.parse(sample_response.body);
 	console.log(json);
 
@@ -126,7 +126,7 @@ window.onclick = function (event) {
             }
         }
     }
-}
+
 
 
 	console.log("log from index2.js");
@@ -278,16 +278,18 @@ window.onclick = function (event) {
 											' Year :  '+car.year+'<br/>'+
 											' Mileage :  '+car.mile+
 											'<button class="car_purchase_button">Buy</button>'+
-											<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
+											'<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
 									'</div>'+
 							'</div>'+
 							'<div class="row row_custom_info">'+
 								'<div class="col">'+
 									'<div class="collapse multi-collapse" id="info' + i + '">' +
 										'<div class="card card-body">'+
+											' Owner :  '+car.userName +'<br/>'+
 											' Description :  '+car.description +'<br/>'+
 											' Contact Info :  '+car.email +'<br/>'+
-											' modelId :  '+car.modelId +'<br/>'+
+											' VIN :  '+car.vin +'<br/>'+
+											' Color : '+ car.color+'<br/>'+
 							'</div></div></div></div></div>';
 					$carsContainer.append(divCarInfo);
 		}
