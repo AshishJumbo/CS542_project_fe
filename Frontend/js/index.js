@@ -272,153 +272,119 @@ $(document).ready(function () {
                 ' Owner :  ' + car.userName + '<br/>' +
                 ' Make :  ' + car.make + '<br/>' +
                 ' Model :  ' + car.model + '<br/>' +
-                ' Price :  ' + car.price + '<br/>' +
+                ' Price :  $' + car.price + '<br/>' +
                 ' Year :  ' + car.year + '<br/>' +
-                ' Mileage :  ' + car.mile +
+                ' Mileage :  ' + car.mile + ' miles<br/>' +
                 '<button class="car_purchase_button">Buy</button>' +
-                '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">More Info</button>' +
+                '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
                 '</div>' +
                 '</div>' +
                 '<div class="row row_custom_info">' +
                 '<div class="col">' +
-                '<div class="collapse multi-collapse" id="multiCollapseExample1">' +
+                '<div class="collapse multi-collapse" id="info' + i + '">' +
                 '<div class="card card-body">' +
+                ' Description :  ' + car.description + '<br/>' +
                 ' VIN :  ' + car.vin + '<br/>' +
                 ' Color :  ' + car.color + '<br/>' +
-                ' Description :  ' + car.description + '<br/>' +
                 ' Contact Info :  ' + car.email + '<br/>' +
                 '</div></div></div></div></div>';
             $carsContainer.append(divCarInfo);
         }
 
-        function populateResponse(cars) {
-            $carsContainer.html("");
-            for (let i = 0; i < cars.length; i++) {
-                let car = cars[i];
-                if (i > 0 && i % 2 == 0) {
-                    $carsContainer.append(divBreak);
-                }
-                divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
-                    '<div class="row">' +
-                    '<img class="car_info_image" src="' + imglnk + '">' +
-                    '<div class="car_info_details align-middle">' +
-                    ' Owner :  ' + car.userName + '<br/>' +
-                    ' Make :  ' + car.make + '<br/>' +
-                    ' Model :  ' + car.model + '<br/>' +
-                    ' Price :  $' + car.price + '<br/>' +
-                    ' Year :  ' + car.year + '<br/>' +
-                    ' Mileage :  ' + car.mile + ' miles<br/>' +
-                    '<button class="car_purchase_button">Buy</button>' +
-                    '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="row row_custom_info">' +
-                    '<div class="col">' +
-                    '<div class="collapse multi-collapse" id="info' + i + '">' +
-                    '<div class="card card-body">' +
-                    ' Description :  ' + car.description + '<br/>' +
-                    ' Contact Info :  ' + car.email + '<br/>' +
-                    ' VIN :  ' + car.vin + '<br/>' +
-                    ' Color :  ' + car.color + '<br/>' +
-                    // ' modelId :  '+car.modelId +'<br/>'+
-                    '</div></div></div></div></div>';
-                $carsContainer.append(divCarInfo);
+        $(".car_more_info_button").click(function () {
+            var $this = $(this);
+            if ($this.html() == "More Info") {
+                $this.html("Less Info");
+            } else {
+                $this.html("More Info");
             }
+        });
 
-            $(".car_more_info_button").click(function () {
-                var $this = $(this);
-                if ($this.html() == "More Info") {
-                    $this.html("Less Info");
-                } else {
-                    $this.html("More Info");
+        $(".add_to_watchlist").click(function () {
+            let $this = $(this);
+            let $parent = $this.parent();
+            let data = {
+                'userId': userId + 4 + "",
+                'carId': $($parent.find(".car_info_details")).data('carid') + ""
+            };
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify(data),
+                url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
+                crossDomain: true,
+                contentType: 'application/json',
+                dataType: 'json',
+
+                success: function (data, status) {
+                    console.log(data);
+                    $this.hide(0);
+                },
+                complete: function () {
+                    console.log("Post request made to server");
+                    // $dialog_container.hide(0);
+                    // $delete_event_dialog.hide(0);
+                    // loadCalendarInfo(selected_calendar);
+                },
+                error: function (error) {
+                    console.log("FAIL....=================");
                 }
             });
 
-            $(".add_to_watchlist").click(function () {
-                let $this = $(this);
-                let $parent = $this.parent();
-                let data = {
-                    'userId': userId + 4 + "",
-                    'carId': $($parent.find(".car_info_details")).data('carid') + ""
-                };
-                $.ajax({
-                    type: 'POST',
-                    data: JSON.stringify(data),
-                    url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-                    crossDomain: true,
-                    contentType: 'application/json',
-                    dataType: 'json',
-
-                    success: function (data, status) {
-                        console.log(data);
-                        $this.hide(0);
-                    },
-                    complete: function () {
-                        console.log("Post request made to server");
-                        // $dialog_container.hide(0);
-                        // $delete_event_dialog.hide(0);
-                        // loadCalendarInfo(selected_calendar);
-                    },
-                    error: function (error) {
-                        console.log("FAIL....=================");
-                    }
-                });
-
-            });
-
-        }
-
-        function setupFilterInformation(cars) {
-            filter_global = {};
-            var filter;
-            for (let i = 0; i < filters.length; i++) {
-                filter = filters[i];
-                filter_global[filter] = [];
-            }
-
-            for (let j = 0; j < cars.length; j++) {
-                let car = cars[j];
-                for (var i = 0; i < filters.length; i++) {
-                    let filter = filters[i];
-                    if (!filter_global[filter].hasOwnProperty(car[filter])) {
-                        filter_global[filter][car[filter]] = 1;
-                    } else {
-                        filter_global[filter][car[filter]]++;
-                    }
-                }
-            }
-
-
-            for (let k = 0; k < filters.length; k++) {
-                let filter_values = Object.keys(filter_global[filters[k]]);
-                $("#" + filters[k]).html("");
-                for (let l = 0; l < filter_values.length; l++) {
-                    $("#" + filters[k]).append('<div class="checkbox list-group-item"><label><input type="checkbox" value="' + filter_values[l] + '" id="' + filter_values[l] + '-filter-id"> &nbsp; ' + filter_values[l] + ' (' + filter_global[filters[k]][filter_values[l]] + ') </label></div>');
-                }
-            }
-        }
-
-        $("#honda-filter-id").click(function () {
-            var temp_data = [];
-            for (let i = 0; i < data_global.length; i++) {
-                let car = data_global[i];
-                console.log(car);
-                if (car.make == "Honda") {
-                    temp_data.push(car);
-                }
-            }
-            populateResponse(temp_data);
-        });
-        $("#undo-filder-id").click(function () {
-            populateResponse(data_global);
-        });
-
-        $('.list-group-item').on('click', function () {
-            $('.glyphicon', this)
-                .toggleClass('glyphicon-chevron-right')
-                .toggleClass('glyphicon-chevron-down');
         });
 
     }
+
+    function setupFilterInformation(cars) {
+        filter_global = {};
+        var filter;
+        for (let i = 0; i < filters.length; i++) {
+            filter = filters[i];
+            filter_global[filter] = [];
+        }
+
+        for (let j = 0; j < cars.length; j++) {
+            let car = cars[j];
+            for (var i = 0; i < filters.length; i++) {
+                let filter = filters[i];
+                if (!filter_global[filter].hasOwnProperty(car[filter])) {
+                    filter_global[filter][car[filter]] = 1;
+                } else {
+                    filter_global[filter][car[filter]]++;
+                }
+            }
+        }
+
+
+        for (let k = 0; k < filters.length; k++) {
+            let filter_values = Object.keys(filter_global[filters[k]]);
+            $("#" + filters[k]).html("");
+            for (let l = 0; l < filter_values.length; l++) {
+                $("#" + filters[k]).append('<div class="checkbox list-group-item"><label><input type="checkbox" value="' + filter_values[l] + '" id="' + filter_values[l] + '-filter-id"> &nbsp; ' + filter_values[l] + ' (' + filter_global[filters[k]][filter_values[l]] + ') </label></div>');
+            }
+        }
+    }
+
+    $("#honda-filter-id").click(function () {
+        var temp_data = [];
+        for (let i = 0; i < data_global.length; i++) {
+            let car = data_global[i];
+            console.log(car);
+            if (car.make == "Honda") {
+                temp_data.push(car);
+            }
+        }
+        populateResponse(temp_data);
+    });
+    $("#undo-filder-id").click(function () {
+        populateResponse(data_global);
+    });
+
+    $('.list-group-item').on('click', function () {
+        $('.glyphicon', this)
+            .toggleClass('glyphicon-chevron-right')
+            .toggleClass('glyphicon-chevron-down');
+    });
+
+
 
 });
