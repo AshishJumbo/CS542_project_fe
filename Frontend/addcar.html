@@ -144,6 +144,20 @@
                             <label for="description">Description:</label>
                             <textarea type="text" class="form-control" rows="4" id="description"></textarea>
                         </li>
+
+                        <div class="form-group">
+                           <label>Upload Image</label>
+                           <div class="input-group">
+                               <span class="input-group-btn">
+                                   <span class="btn btn-default btn-file">
+                                       Browse… <input type="file" id="imgInp">
+                                   </span>
+                               </span>
+                               <input type="text" class="form-control" readonly>
+                           </div>
+                           <img id='img-upload'/>
+                       </div>
+
                         <li class="dropdown-divider"></li>
                         <li>
                             <a href="#" class="btn btn-dark" id="prev">Go Back</a>
