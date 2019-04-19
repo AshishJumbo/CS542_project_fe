@@ -1,32 +1,14 @@
 /*assuming data is the reponse we get from the server in json format*/
 $(document).ready(function () {
+
+    check_login_status();
     let data = {
         'cars': []
     }
     var data_global;
     var filter_global;
     let filters = ['make', 'model', 'color'];
-    let userId = 1;
-
-    check_login_status();
-
-    let imglnk = "http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg";
-    var addToWatchlist = "images/add-to-watch2.png";
-    var sample_response = {
-        "isBase64Encoded": false,
-        "body": "{\"input\":\"{}\",\"vehicleList\":\"{\\\"vehicles\\\":[{\\\"makeId\\\":\\\"3\\\",\\\"trim\\\":\\\"Sport\\\",\\\"trimId\\\":\\\"1\\\",\\\"year\\\":\\\"2019\\\",\\\"modelId\\\":\\\"7\\\",\\\"price\\\":\\\"35000\\\",\\\"mile\\\":4000,\\\"description\\\":\\\"Please contact me if you are interested\\\",\\\"model\\\":\\\"MX-5\\\",\\\"make\\\":\\\"Mazda\\\",\\\"email\\\":\\\"kshao2@wpi.edu\\\",\\\"carId\\\":\\\"3\\\"},{\\\"makeId\\\":\\\"1\\\",\\\"trim\\\":\\\"Hybrid\\\",\\\"trimId\\\":\\\"12\\\",\\\"year\\\":\\\"2015\\\",\\\"modelId\\\":\\\"2\\\",\\\"price\\\":\\\"29987\\\",\\\"mile\\\":29938,\\\"description\\\":\\\"A bargain. Please contact me for more information!\\\",\\\"model\\\":\\\"Camry\\\",\\\"make\\\":\\\"Toyota\\\",\\\"email\\\":\\\"wlm3@wpi.edu\\\",\\\"carId\\\":\\\"4\\\"},{\\\"makeId\\\":\\\"1\\\",\\\"trim\\\":\\\"Limited\\\",\\\"trimId\\\":\\\"16\\\",\\\"year\\\":\\\"2014\\\",\\\"modelId\\\":\\\"2\\\",\\\"price\\\":\\\"25699\\\",\\\"mile\\\":46771,\\\"description\\\":\\\"Contact ackme@wpi.edu plz.\\\",\\\"model\\\":\\\"Camry\\\",\\\"make\\\":\\\"Toyota\\\",\\\"email\\\":\\\"wlm5@wpi.edu\\\",\\\"carId\\\":\\\"6\\\"},{\\\"makeId\\\":\\\"4\\\",\\\"trim\\\":\\\"EX-L\\\",\\\"trimId\\\":\\\"9\\\",\\\"year\\\":\\\"2008\\\",\\\"modelId\\\":\\\"10\\\",\\\"price\\\":\\\"20199\\\",\\\"mile\\\":92039,\\\"description\\\":\\\"A nice car, it runs perfectly and the brake pads are new. Please let me know if you are interested. erk3@wpi.edu\\\",\\\"model\\\":\\\"Accord\\\",\\\"make\\\":\\\"Honda\\\",\\\"email\\\":\\\"test.wpi.edu\\\",\\\"carId\\\":\\\"7\\\"},{\\\"makeId\\\":\\\"4\\\",\\\"trim\\\":\\\"EX\\\",\\\"trimId\\\":\\\"7\\\",\\\"year\\\":\\\"2003\\\",\\\"modelId\\\":\\\"10\\\",\\\"price\\\":\\\"8700\\\",\\\"mile\\\":100392,\\\"description\\\":\\\"You can contact brm12@wpi.edu for testdrive.\\\",\\\"model\\\":\\\"Accord\\\",\\\"make\\\":\\\"Honda\\\",\\\"email\\\":\\\"admin@wpi-car.com\\\",\\\"carId\\\":\\\"8\\\"}]}\"}",
-        "statusCode": "200"
-    };
-
-// Get the modal
-    var modal = document.getElementById('login-modal');
-// When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    };
-
+    let userId = 1; //TODO: T0mi: userId field should only be retrieved from localStorage instead of this fixed value.
     $("#modal-cancel").click(function () {
         modal.style.display = 'none';
     });
@@ -54,24 +36,42 @@ $(document).ready(function () {
 
     });
 
+
+    let imglnk = "http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg";
+    var addToWatchlist = "images/add-to-watch2.png";
+
+// Get the modal
+    var modal = document.getElementById('login-modal');
+// When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+
+
+
     // TODO: T0mi: These 3 functions are required for login in all scripts.
     // auth_user(): action for "login" button onClick event
-    // check_login_status(): should be put in the document.onReady() which calls getCookie() to determine login status
-    // get/setCookie(): utility function for get/set login cookie
+    // check_login_status(): should be put in the document.onReady() which calls getItem() to determine login status
+    // get/setItem(): utility function for get/set login storage
 
     function auth_user(data) {
         $.ajax({
             type: 'POST',
             data: JSON.stringify(data),
-            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/authenticateuser',
             crossDomain: true,
             contentType: 'application/json',
             dataType: 'json',
+            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/authenticateuser',
+
             success: function (data) {
                 // Create cookie if login auth success
                 let object = JSON.parse(data.body);
                 console.log("Returned from Auth_User: " + object.userId);
                 setItem("userId", object.userId);
+                setItem("userName", object.user_name);
+                setItem("email", object.email);
             },
             complete: function () {
                 console.log("Login auth post request made to server");
@@ -79,7 +79,7 @@ $(document).ready(function () {
                 check_login_status();
                 modal.style.display = 'none';
             },
-            error: function (error) {
+            error: function () {
                 console.log("login post FAIL....=================");
             }
         });
@@ -167,19 +167,6 @@ $(document).ready(function () {
             '</div></div></div></div></div>';
         $carsContainer.append(divCarInfo);
     }
-
-    var json_data = {
-        'year': '1990',
-        'makeId': '1234123',
-        'modelId': '123',
-        'trimId': '123',
-        'vin': 'aeiou',
-        'mile': 'abcde',
-        'color': 'black and blue',
-        'price': '100',
-        'desc': 'lalalala',
-        'userId': 'Monkey Kong'
-    };
 
     $.ajax({
         type: 'GET',

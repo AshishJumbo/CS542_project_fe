@@ -37,14 +37,15 @@ public class AuthenticateUserHandler implements RequestStreamHandler {
                 password = (String) event.get("password");
             }
 
-            int result = checkUser(user_name, password, context);
-
+            JSONObject result = checkUser(user_name, password, context);
             JSONObject responseBody = new JSONObject();
-            if (result != 0) responseBody.put("userId", result);
+            if (result != null) responseBody=result;
             else {
                 responseBody.put("userId", "Fail login");
                 responseCode = "401";
             }
+
+            responseBody.put("input", event.toString());
 
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
@@ -61,9 +62,9 @@ public class AuthenticateUserHandler implements RequestStreamHandler {
         writer.close();
     }
 
-    private int checkUser(String user_name, String password, Context context) {
+    private JSONObject checkUser(String user_name, String password, Context context) {
         LambdaLogger logger = context.getLogger();
-        int result = 0;
+        JSONObject rs = new JSONObject();
 
         try {
             String url = "jdbc:mysql://cardb.clnm8zsvchg3.us-east-2.rds.amazonaws.com:3306";
@@ -73,13 +74,15 @@ public class AuthenticateUserHandler implements RequestStreamHandler {
             Connection conn = DriverManager.getConnection(url, username, dbpassword);
             Statement stmt = conn.createStatement();
 
-            String checkUser = String.format("select id from innodb.User where user_name = '%s' and password = '%s'",
+            String checkUser = String.format("select id, user_name, email from innodb.User where user_name = '%s' and password = '%s'",
                     user_name, password);
             logger.log(checkUser);
             ResultSet resultSet = stmt.executeQuery(checkUser);
 
             while (resultSet.next()) {
-                result = resultSet.getInt("id");
+                rs.put("userId", resultSet.getInt("id"));
+                rs.put("user_name", resultSet.getString("user_name"));
+                rs.put("email", resultSet.getString("email"));
             }
 
             resultSet.close();
@@ -92,7 +95,7 @@ public class AuthenticateUserHandler implements RequestStreamHandler {
             logger.log("Caught exception: " + e.getMessage());
             logger.log("" + e.getStackTrace()[0].getLineNumber());
         }
-        return result;
+        return rs;
     }
 
 }

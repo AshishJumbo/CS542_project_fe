@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    check_login_status(); // checks the status for login box content
     // Get the modal
     var modal = document.getElementById('login-modal');
 // When the user clicks anywhere outside of the modal, close it
@@ -35,6 +36,12 @@ $(document).ready(function () {
         window.location = 'index.html';
     });
 
+
+    // TODO: T0mi: These 3 functions are required for login in all scripts.
+    // auth_user(): action for "login" button onClick event
+    // check_login_status(): should be put in the document.onReady() which calls getItem() to determine login status
+    // get/setItem(): utility function for get/set login storage
+
     function auth_user(data) {
         $.ajax({
             type: 'POST',
@@ -47,7 +54,10 @@ $(document).ready(function () {
                 // Create cookie if login auth success
                 let object = JSON.parse(data.body);
                 console.log("Returned from Auth_User: " + object.userId);
+                bootbox.alert("Welcome "+getItem("userName")+"!");
                 setItem("userId", object.userId);
+                setItem("userName", object.user_name);
+                setItem("email", object.email);
             },
             complete: function () {
                 console.log("Login auth post request made to server");
@@ -55,7 +65,7 @@ $(document).ready(function () {
                 check_login_status();
                 modal.style.display = 'none';
             },
-            error: function (error) {
+            error: function () {
                 console.log("login post FAIL....=================");
             }
         });
@@ -63,8 +73,7 @@ $(document).ready(function () {
 
     function check_login_status() {
         let login_cliche = '<a class="dropdown-toggle nav-link" href="#" role="button" id="login-modal-open">Login</a>';
-        let username_cliche = '<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"\n' +
-            '                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Account</a>' +
+        let username_cliche = '<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Account</a>' +
             '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">\n' +
             '<a class="dropdown-item" href="user.html">My Garage</a>\n' +
             '<div class="dropdown-divider"></div>\n' +
@@ -81,6 +90,8 @@ $(document).ready(function () {
             console.log("CLS: user_name cliche")
             $login_status_box.html("");
             $login_status_box.append(username_cliche);
+            $("#user_info_box").html("<li>User ID="+localStorage.getItem("userId")+"</li><li>User Name="+localStorage.getItem("userName")+"</li>" +
+                "<li>User Email="+localStorage.getItem("email")+"</li>");
         }
     }
 
@@ -92,7 +103,7 @@ $(document).ready(function () {
         return localStorage.getItem(cname);
     }
 
-    check_login_status(); // checks the status for login box content
+
     let data = {
         'cars': []
     };
@@ -170,33 +181,33 @@ $(document).ready(function () {
         $carsContainer.append(divCarInfo);
     }
 
-    $.ajax({
-        type: 'GET',
-        url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-        crossDomain: true,
-        contentType: 'application/json',
-        dataType: 'json',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
-
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
-        success: function (data, status) {
-            console.log(data);
-            // populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));
-            data_global = JSON.parse(JSON.parse(sample_response.body).vehicleList).vehicles;
-            populateResponse(data_global);
-        },
-        complete: function () {
-            console.log("Post request made to server");
-            // $dialog_container.hide(0);
-            // $delete_event_dialog.hide(0);
-            // loadCalendarInfo(selected_calendar);
-        },
-        error: function (error) {
-            console.log("FAIL....=================");
-        }
-    });
+    // $.ajax({
+    //     type: 'GET',
+    //     url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
+    //     crossDomain: true,
+    //     contentType: 'application/json',
+    //     dataType: 'json',
+    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
+    //
+    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
+    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
+    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
+    //     success: function (data, status) {
+    //         // console.log(data);
+    //         // populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));
+    //         data_global = JSON.parse(JSON.parse(sample_response.body).vehicleList).vehicles;
+    //         populateResponse(data_global);
+    //     },
+    //     complete: function () {
+    //         console.log("Post request made to server");
+    //         // $dialog_container.hide(0);
+    //         // $delete_event_dialog.hide(0);
+    //         // loadCalendarInfo(selected_calendar);
+    //     },
+    //     error: function (error) {
+    //         console.log("FAIL....=================");
+    //     }
+    // });
 
     function populateResponse(cars) {
         $selllistContainer = $("#selllist").html('');//<h1 class="mt-4">Sell List</h1>

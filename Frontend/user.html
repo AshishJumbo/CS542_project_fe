@@ -64,46 +64,34 @@
           </li>
         </ul>
       </div>
-          <!-- The Login Modal -->
-          <div id="login-modal" class="modal">
-              <!-- Modal Content -->
-              <form id="login-form" class="modal-content animate">
 
-                  <div class="container">
-                      <label for="user_name"><b>Username</b></label>
-                      <input type="text" placeholder="Enter Username" name="user_name" id="user_name" required>
-
-                      <label for="password"><b>Password</b></label>
-                      <input type="password" placeholder="Enter Password" name="password" id="password" required>
-
-                      <button id="login_form_submit" class="fullsize-btn" type="submit">Login</button>
-                  </div>
-
-                  <div class="container" style="background-color:#f1f1f1">
-                      <button id="modal-cancel" type="button" class="fullsize-btn cancelbtn">
-                          Cancel
-                      </button>
-                  </div>
-              </form>
-          </div>
     </nav>
+        <!-- The Login Modal -->
+        <div id="login-modal" class="modal">
+            <!-- Modal Content -->
+            <form id="login-form" class="modal-content animate">
 
+                <div class="container">
+                    <label for="user_name"><b>Username</b></label>
+                    <input type="text" placeholder="Enter Username" name="user_name" id="user_name" required>
+
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+                    <button id="login_form_submit" class="fullsize-btn" type="submit">Login</button>
+                </div>
+
+                <div class="container" style="background-color:#f1f1f1">
+                    <button id="modal-cancel" type="button" class="fullsize-btn cancelbtn">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
         <div class="container-fluid col-md-12 ml-sm-auto col-lg-12 px-4">
             <div class="container-fluid" id="account-details-content">
-                <ul class="navbar-nav">
-                    <li>
-                        <p>User ID: 1</p>
-                    </li>
-                    <li>
-                        <p>User name: admin</p>
-                    </li>
-                    <li>
-                        <p>Email: admin@wpi.edu</p>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <a href="#" class="btn btn-info" id="reset-password">Reset Password</a>
-                    </li>
+                <ul class="navbar-nav" id="user_info_box">
+
                 </ul>
 
 

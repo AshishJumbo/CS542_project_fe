@@ -34,7 +34,7 @@ $("#create-new-listing").click(function () {
 });
 
 $("#makeId").click(function(){
-    $(this).children().html("LOL");
+    // $(this).children().html("LOL");
 });
 $("#next").click(function () {
     document.getElementById("detailed-info-content").style.display = "block";
@@ -79,11 +79,16 @@ function add_car_DB(data) {
             // $delete_event_dialog.hide(0);
             // loadCalendarInfo(selected_calendar);
         },
-        error: function (error) {
+        error: function () {
             console.log("FAIL....=================");
         }
     });
 }
 
+
 $(document).ready(function () {
+    let data = {
+        'makes': [],
+
+    }
 });

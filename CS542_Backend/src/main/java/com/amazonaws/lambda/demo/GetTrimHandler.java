@@ -1,23 +1,17 @@
 package com.amazonaws.lambda.demo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
+import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class GetTrimHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
@@ -43,7 +37,7 @@ public class GetTrimHandler implements RequestStreamHandler {
             JSONObject trimList = getTrimList(modelId, context);
 
             JSONObject responseBody = new JSONObject();
-            responseBody.put("input", event.toString());
+//            responseBody.put("input", event.toString());
             responseBody.put("trimList", trimList.toString());
 
             responseJson.put("isBase64Encoded", false);
