@@ -13,7 +13,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class GetModelHandler implements RequestStreamHandler {
+public class GetUserInfoHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
 
     @Override
@@ -25,21 +25,16 @@ public class GetModelHandler implements RequestStreamHandler {
         JSONObject responseJson = new JSONObject();
         String responseCode = "200";
 
-        int makeId = -1;
+        int userId = -1;
 
         try {
             JSONObject event = (JSONObject) parser.parse(reader);
             logger.log(event.toString());
-            if (event.get("makeId") != null) {
-                makeId = Integer.parseInt((String) event.get("makeId"));
+            if (event.get("userId") != null) {
+                userId = Integer.parseInt((String) event.get("userId"));
             }
-            logger.log("The makeId queried for getModels " + makeId);
 
-            JSONObject modelList = getModelList(makeId, context);
-
-            JSONObject responseBody = new JSONObject();
-            responseBody.put("input", event.toString());
-            responseBody.put("modelList", modelList.toString());
+            JSONObject responseBody = getUserInfo(userId, context);
 
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
@@ -56,7 +51,7 @@ public class GetModelHandler implements RequestStreamHandler {
         writer.close();
     }
 
-    private JSONObject getModelList(int makeId, Context context) {
+    private JSONObject getUserInfo(int userId, Context context) {
         LambdaLogger logger = context.getLogger();
         JSONObject rs = new JSONObject();
         try {
@@ -64,23 +59,21 @@ public class GetModelHandler implements RequestStreamHandler {
             String username = "calcAdmin";
             String dbpassword = "rootmasterpassword";
 
-//    	    Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, username, dbpassword);
             Statement stmt = conn.createStatement();
 
-            String query = String.format(
-                    "select * from innodb.Model as model where model.id in (select mid.modelId from innodb.Make_Model as mid where mid.makeId='%d');", makeId);
+            String query = String.format("select user.user_name, user.email from innodb.User as user where user.id='%d';", userId);
             ResultSet resultSet = stmt.executeQuery(query);
 
-            JSONArray modelList = new JSONArray();
+            JSONArray infoList = new JSONArray();
             while (resultSet.next()) {
-                JSONObject model = new JSONObject();
-                model.put("modelId", resultSet.getString("model.id"));
-                model.put("modelName", resultSet.getString("model.name"));
-                modelList.add(model);
+                JSONObject info = new JSONObject();
+                info.put("user_name", resultSet.getString("user.user_name"));
+                info.put("email", resultSet.getString("user.email"));
+                infoList.add(info);
             }
 
-            rs.put("models", modelList);
+            rs.put("userInfo", infoList);
 
             resultSet.close();
 

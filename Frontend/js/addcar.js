@@ -6,6 +6,7 @@
 $(document).ready(function () {
     let makeList_global;
     let modelList_global;
+    let trimList_global;
 
     $("#menu-toggle").click(function (e) {
         e.preventDefault();
@@ -47,15 +48,38 @@ $(document).ready(function () {
         populateMakes(makeList_global);
     });
     $("#makeId").change(function(){
+        console.log("Changed makeID");
         $("#modelId").html("");
+        modelList_global=null;
     });
     $("#modelId").mouseenter(function () {
-
         let makeId = $("#makeId").val();
-        if(makeId!="-"){
-            get_model_DB(makeId);
-            console.log("getting models for makeID=" + makeId);
+        if(makeId!="-" && modelList_global==null){
+            let values={};
+            values['makeId']=makeId;
+            get_model_DB(values);
+            console.log("makeId={" + values.makeId);
         }
+    });
+    $("#modelId").mousedown(function () {
+        populateModels(modelList_global);
+    });
+    $("#modelId").change(function(){
+        console.log("Changed modelId");
+        $("#trimId").html("");
+        trimList_global=null;
+    });
+    $("#trimId").mouseenter(function () {
+        let modelId = $("#modelId").val();
+        if((modelId!="-"||modelId!="") && trimList_global==null){
+            let values={};
+            values['modelId']=modelId;
+            get_trim_DB(values);
+            console.log("modelId={" + values.modelId);
+        }
+    });
+    $("#trimId").mousedown(function () {
+        populateTrims(trimList_global);
     });
 
     $("#next").click(function () {
@@ -85,20 +109,53 @@ $(document).ready(function () {
             $("#modelId").append(cliche);
         }
     }
-    function get_model_DB(make){
+    function populateTrims(trims){
+        $("#trimId").html("");
+        let cliche;
+        for (let i = 0; i < trims.length; i++) {
+            cliche="<option value="+trims[i].trimId+">"+trims[i].trimName+"</option>";
+            $("#trimId").append(cliche);
+        }
+    }
+    function get_trim_DB(data){
         $.ajax({
-            type: 'GET',
+            type: 'POST',
+            data: JSON.stringify(data),
             crossDomain: true,
             contentType: 'application/json',
             dataType: 'json',
-            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getmodel',
-            success: function (make) {
-                let models = JSON.parse(JSON.parse(make.body).modelList);
-                models = models.models;
-                populateModels(models);
+            // url: url,
+            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/gettrim',
+            success: function (data) {
+                trimList_global = JSON.parse(JSON.parse(data.body).trimList);
+                trimList_global = trimList_global.trims;
+                console.log(data)
             },
             complete: function () {
-                console.log("Get Make DB request made to server");
+                console.log("Get trim DB request made to server ");
+            },
+            error: function () {
+                console.log("FAIL....=================");
+            }
+
+        })
+    }
+    function get_model_DB(data){
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            crossDomain: true,
+            contentType: 'application/json',
+            dataType: 'json',
+            // url: url,
+            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getmodel',
+            success: function (data) {
+                modelList_global = JSON.parse(JSON.parse(data.body).modelList);
+                modelList_global = modelList_global.models;
+                console.log(data)
+            },
+            complete: function () {
+                console.log("Get model DB request made to server ");
             },
             error: function () {
                 console.log("FAIL....=================");
@@ -136,17 +193,13 @@ $(document).ready(function () {
             dataType: 'json',
             url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
 
-            success: function (data, status) {
+            success: function (data) {
                 console.log(data);
                 bootbox.alert("Congratulation!!! The car has been added to our database.");
-                // populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));
             },
             complete: function () {
                 console.log("Post request made to server");
                 $('#new-car').trigger('reset');
-                // $dialog_container.hide(0);
-                // $delete_event_dialog.hide(0);
-                // loadCalendarInfo(selected_calendar);
             },
             error: function () {
                 console.log("FAIL....=================");
