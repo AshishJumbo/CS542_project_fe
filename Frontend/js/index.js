@@ -15,7 +15,8 @@ $(document).ready(function () {
     $("#login-modal-open").click(function () {
         modal.style.display = 'block'
     });
-    $("#login_form_submit").click(function () {
+    $("#login_form_submit").click(function (e) {
+				e.preventDefault();
         var $inputs = $('#login-form :input');
         // var json = JSON.parse(sample_response.body);
         console.log("Login-submit: Clicked");
@@ -337,22 +338,56 @@ $(document).ready(function () {
             let filter_values = Object.keys(filter_global[filters[k]]);
             $("#" + filters[k]).html("");
             for (let l = 0; l < filter_values.length; l++) {
-                $("#" + filters[k]).append('<div class="checkbox list-group-item"><label><input type="checkbox" value="' + filter_values[l] + '" id="' + filter_values[l] + '-filter-id"> &nbsp; ' + filter_values[l] + ' (' + filter_global[filters[k]][filter_values[l]] + ') </label></div>');
+                $("#" + filters[k]).append('<div class="checkbox list-group-item"><label class="filter-label" ><input type="checkbox" data-parentfilter = "'+filters[k].toLowerCase() +'" value="' + filter_values[l].toLowerCase() + '" id="' + filter_values[l].toLowerCase() + '-filter-id"> &nbsp; ' + filter_values[l] + ' (' + filter_global[filters[k]][filter_values[l]] + ') </label></div>');
             }
         }
+				setFiltersClickable();
     }
 
-    $("#honda-filter-id").click(function () {
-        var temp_data = [];
-        for (let i = 0; i < data_global.length; i++) {
-            let car = data_global[i];
-            console.log(car);
-            if (car.make == "Honda") {
-                temp_data.push(car);
-            }
-        }
-        populateResponse(temp_data);
-    });
+
+		var activefilters = [];
+		function setFiltersClickable(){
+			$(".filter-label > input").click(function (e) {
+				// e.preventDefault();
+				// var $input = $(this).find('input');
+				// var filterVal = $input.val();
+				// var $input = $(this).find('input');
+				var filterVal = $(this).val();
+				if(activefilters.indexOf(filterVal) == -1){
+					activefilters.push(filterVal);
+				} else {
+					activefilters.splice(activefilters.indexOf(filterVal), 1);
+				}
+
+
+				// eval() makes string get evaluated as a js code
+				var ifconditions = "";
+
+				for(let j=0; j<activefilters.length; j++){
+					if(j == 0)
+						ifconditions += "(car[ '"+$('#'+activefilters[j]+'-filter-id').data('parentfilter').toLowerCase()+"']).toLowerCase() == '"+ activefilters[j]+"'";
+					else
+						ifconditions += "|| (car[ '"+$('#'+activefilters[j]+'-filter-id').data('parentfilter').toLowerCase() +"']).toLowerCase() == '"+ activefilters[j]+"'";
+
+				}
+
+				var temp_data = [];
+				let carIds = [];
+				for (let i = 0; i < data_global.length; i++) {
+					let car = data_global[i];
+					console.log(car);
+					if ( eval(ifconditions) ) {
+						if(carIds.indexOf(car.carId) == -1)
+							temp_data.push(car);
+					}
+				}
+				if(temp_data.length == 0 && activefilters.length == 0)
+					temp_data = data_global;
+				populateResponse(temp_data);
+				return true;
+			});
+		}
+
     $("#undo-filder-id").click(function () {
         populateResponse(data_global);
     });
