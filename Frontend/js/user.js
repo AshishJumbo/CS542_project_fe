@@ -1,7 +1,7 @@
 $(document).ready(function () {
     check_login_status(); // checks the status for login box content
     // Get the modal
-    var modal = document.getElementById('login-modal');
+    let modal = document.getElementById('login-modal');
 // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == modal) {
@@ -15,14 +15,15 @@ $(document).ready(function () {
     $("#login-modal-open").click(function () {
         modal.style.display = 'block'
     });
-    $("#login_form_submit").click(function () {
-        var $inputs = $('#login-form :input');
+    $("#login_form_submit").click(function (e) {
+        e.preventDefault();
+        let $inputs = $('#login-form :input');
         // var json = JSON.parse(sample_response.body);
         console.log("Login-submit: Clicked");
 
         // not sure if you wanted this, but I thought I'd add it.
         // get an associative array of just the values.
-        var values = {};
+        let values = {};
         $inputs.each(function () {
             values[this.id] = $(this).val();
         });
@@ -195,8 +196,8 @@ $(document).ready(function () {
     //     success: function (data, status) {
     //         // console.log(data);
     //         // populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));
-    //         data_global = JSON.parse(JSON.parse(sample_response.body).vehicleList).vehicles;
-    //         populateResponse(data_global);
+    //         makeList = JSON.parse(JSON.parse(sample_response.body).vehicleList).vehicles;
+    //         populateResponse(makeList);
     //     },
     //     complete: function () {
     //         console.log("Post request made to server");
