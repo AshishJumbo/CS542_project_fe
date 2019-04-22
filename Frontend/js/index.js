@@ -204,7 +204,7 @@ $(document).ready(function () {
             }
             divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
                 '<div class="row">' +
-                '<img class="car_info_image" src="' + imglnk+car.img_name.trim() + '">' +
+                '<img class="car_info_image" src="' + imglnk+car.imgName.trim() + '">' +
                 '<div class="car_info_details align-middle">' +
                 ' Add Date :  ' + car.date + '<br/>' +
                 ' Make :  ' + car.make + '<br/>' +

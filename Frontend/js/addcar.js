@@ -35,7 +35,7 @@ $(document).ready(function () {
         }
     }
 
-    $("#img_name").change(function(){
+    $("#imgName").change(function(){
         readURL(this);
     });
     /* NOTE: Ashish mod ends */
@@ -67,7 +67,7 @@ $(document).ready(function () {
         $inputs.each(function () {
             values[this.id] = $(this).val();
         });
-        values['img_name'] = $('input[type=file]').val().split('\\').pop();
+        values['imgName'] = $('input[type=file]').val().split('\\').pop();
         values['userId'] = localStorage.getItem("userId");
         console.log(values);
         addPhoto('car-images');

@@ -1,4 +1,4 @@
-// AWS credentials
+imgName// AWS credentials
 // var albumBucketName = "BUCKET-NAME";
 // var bucketRegion = "REGION";
 // var IdentityPoolId = "IDENTITYPOOLID";
@@ -122,7 +122,7 @@ function viewAlbum(albumName) {
       '<div>',
         getHtml(photos),
       '</div>',
-      '<input id="img_name" type="file" accept="image/*">',
+      '<input id="imgName" type="file" accept="image/*">',
       '<button id="addphoto" onclick="addPhoto(\'' + albumName +'\')">',
         'Add Photo',
       '</button>',
@@ -135,7 +135,7 @@ function viewAlbum(albumName) {
 }
 
 function addPhoto(albumName) {
-  var files = document.getElementById('img_name').files;
+  var files = document.getElementById('imgName').files;
   if (!files.length) {
     return alert('Please choose a file to upload first.');
   }
