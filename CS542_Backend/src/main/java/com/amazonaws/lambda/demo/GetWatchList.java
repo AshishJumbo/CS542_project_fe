@@ -1,23 +1,17 @@
 package com.amazonaws.lambda.demo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
+import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class GetWatchList implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
@@ -74,10 +68,11 @@ public class GetWatchList implements RequestStreamHandler {
             Statement stmt = conn.createStatement();
 
             //	Add new car
-            String listVehicle = String.format("select car.id, car.year, car.makeId, make.name, car.modelId, model.name, car.trimId, trim.name,\n" +
-                    "car.vin, car.mile, car.color, car.price, car.description, car.date\n" +
+            String listVehicle = String.format("select car.id, user.email, user.user_name, car.year, car.makeId, make.name, car.modelId, model.name, car.trimId, trim.name,\n" +
+                    "car.vin, car.mile, car.color, car.price, car.description, car.img_name, car.date\n" +
                     "from (select watchlist.carId from innodb.Watchlist as watchlist where watchlist.userId = '%d') as temp1\n" +
                     "inner join innodb.Car as car on temp1.carId = car.id\n" +
+                    "inner join innodb.User as user on car.userId = user.id\n" +
                     "inner join innodb.Make as make on car.makeId = make.id\n" +
                     "inner join innodb.Model as model on car.modelId = model.id\n" +
                     "inner join innodb.Trim as trim on car.trimId = trim.id", userId);
@@ -93,12 +88,15 @@ public class GetWatchList implements RequestStreamHandler {
                 vehicle.put("modelId", resultSet.getString("car.modelId"));
                 vehicle.put("model", resultSet.getString("model.name"));
                 vehicle.put("trimId", resultSet.getString("car.trimId"));
+                vehicle.put("email", resultSet.getString("user.email"));
                 vehicle.put("trim", resultSet.getString("trim.name"));
+                vehicle.put("userName", resultSet.getString("user.user_name"));
                 vehicle.put("vin", resultSet.getString("car.vin"));
                 vehicle.put("mile", resultSet.getInt("car.mile"));
                 vehicle.put("price", resultSet.getInt("car.price"));
                 vehicle.put("color", resultSet.getString("car.color"));
                 vehicle.put("date", resultSet.getString("car.date"));
+                vehicle.put("imgName", resultSet.getString("car.img_name"));
                 vehicle.put("description", resultSet.getString("car.description"));
                 vehicleList.add(vehicle);
             }

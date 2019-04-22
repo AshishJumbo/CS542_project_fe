@@ -1,23 +1,15 @@
 package com.amazonaws.lambda.demo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class RemoveFromWatchlistHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
@@ -42,10 +34,10 @@ public class RemoveFromWatchlistHandler implements RequestStreamHandler {
                 userId = Integer.parseInt((String) event.get("userId"));
             }
             if (event.get("carId") != null) {
-                userId = Integer.parseInt((String) event.get("carId"));
+                carId = Integer.parseInt((String) event.get("carId"));
             }
             if (userId == -1 || carId == -1) {
-                throw new Exception("Invalid input to remove item from watch list");
+                throw new Exception("Invalid input to remove item from watch list, with userId="+ userId +", carId="+carId);
             }
 
             removeFromWatchList(userId, carId, context);
@@ -69,23 +61,22 @@ public class RemoveFromWatchlistHandler implements RequestStreamHandler {
 
     private void removeFromWatchList(int userId,int carId, Context context) {
         LambdaLogger logger = context.getLogger();
-        JSONObject rs = new JSONObject();
         try {
             String url = "jdbc:mysql://cardb.clnm8zsvchg3.us-east-2.rds.amazonaws.com:3306";
             String username = "calcAdmin";
             String dbpassword = "rootmasterpassword";
 
-//    	    Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, username, dbpassword);
             Statement stmt = conn.createStatement();
 
             //	update statement
-            String update = String.format("DELETE FROM innodb.Watchlist WHERE userId = '%d' and carId = '%d';", userId, carId);
+            String update = String.format("DELETE FROM innodb.Watchlist WHERE userId = %d and carId = %d ;", userId, carId);
             stmt.executeUpdate(update);
 
 
             stmt.close();
             conn.close();
+
 
         } catch (Exception e) {
             e.printStackTrace();

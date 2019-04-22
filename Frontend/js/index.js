@@ -19,7 +19,6 @@ $(document).ready(function () {
 				e.preventDefault();
         var $inputs = $('#login-form :input');
         // var json = JSON.parse(sample_response.body);
-        console.log("Login-submit: Clicked");
 
         // not sure if you wanted this, but I thought I'd add it.
         // get an associative array of just the values.
@@ -27,7 +26,6 @@ $(document).ready(function () {
         $inputs.each(function () {
             values[this.id] = $(this).val();
         });
-        console.log("Sent value: "+values.user_name+" "+values.password);
         auth_user(values);
     });
     $("#logout_button").click(function (){
@@ -71,9 +69,11 @@ $(document).ready(function () {
                 // Create cookie if login auth success
                 let object = JSON.parse(data.body);
                 console.log("Returned from Auth_User: " + object.userId);
+
                 setItem("userId", object.userId);
                 setItem("userName", object.user_name);
                 setItem("email", object.email);
+                bootbox.alert("Welcome "+getItem("userName")+"!");
             },
             complete: function () {
                 console.log("Login auth post request made to server");
@@ -176,11 +176,6 @@ $(document).ready(function () {
         crossDomain: true,
         contentType: 'application/json',
         dataType: 'json',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
-
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
 
         success: function (data, status) {
             data_global = JSON.parse(JSON.parse(data.body).vehicleList);
@@ -191,51 +186,13 @@ $(document).ready(function () {
         },
         complete: function () {
             console.log("Post request made to server");
-            // $dialog_container.hide(0);
-            // $delete_event_dialog.hide(0);
-            // loadCalendarInfo(selected_calendar);
-            // getWatchlist();
         },
         error: function (error) {
             console.log("FAIL....=================");
         }
     });
 
-    function getWatchlist() {
-        let data = {'userId': userId};
-        $.ajax({
-            type: 'GET',
-            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-            crossDomain: true,
-            contentType: 'application/json',
-            dataType: 'json',
-            // data: JSON.stringify(data),
-            // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
 
-            // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-            // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-            // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
-
-            success: function (data, status) {
-                console.log(data);
-                alreadyInWatchlist(data);
-            },
-            complete: function () {
-                console.log("Post request made to server");
-                // $dialog_container.hide(0);
-                // $delete_event_dialog.hide(0);
-                // loadCalendarInfo(selected_calendar);
-                getWatchlist();
-            },
-            error: function (error) {
-                console.log("FAIL....=================");
-            }
-        });
-    }
-
-    function alreadyInWatchlist(data) {
-        console.log(data);
-    }
 
     // Populate car-container with DB-pulled car info.
     function populateResponse(cars) {
@@ -249,12 +206,13 @@ $(document).ready(function () {
                 '<div class="row">' +
                 '<img class="car_info_image" src="' + imglnk+car.img_name.trim() + '">' +
                 '<div class="car_info_details align-middle">' +
+                ' Add Date :  ' + car.date + '<br/>' +
                 ' Make :  ' + car.make + '<br/>' +
                 ' Model :  ' + car.model + '<br/>' +
                 ' Price :  ' + car.price + '<br/>' +
                 ' Year :  ' + car.year + '<br/>' +
                 ' Mileage :  ' + car.mile +
-                '<button class="car_purchase_button">Buy</button>' +
+                '<button class="add_to_watchlist" type="button" value="'+car.carId+'">Add to Watchlist</button>' +
                 '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
                 '</div>' +
                 '</div>' +
@@ -282,10 +240,9 @@ $(document).ready(function () {
 
         $(".add_to_watchlist").click(function () {
             let $this = $(this);
-            let $parent = $this.parent();
             let data = {
-                'userId': userId + 4 + "",
-                'carId': $($parent.find(".car_info_details")).data('carid') + ""
+                'userId': getItem("userId"),
+                'carId': $this.val()
             };
             $.ajax({
                 type: 'POST',
@@ -295,15 +252,13 @@ $(document).ready(function () {
                 contentType: 'application/json',
                 dataType: 'json',
 
-                success: function (data, status) {
+                success: function (data) {
                     console.log(data);
+                    bootbox.alert("The car has been added to your watchlist!");
                     $this.hide(0);
                 },
                 complete: function () {
-                    console.log("Post request made to server");
-                    // $dialog_container.hide(0);
-                    // $delete_event_dialog.hide(0);
-                    // loadCalendarInfo(selected_calendar);
+                    console.log("add watchlist request made to server");
                 },
                 error: function (error) {
                     console.log("FAIL....=================");
