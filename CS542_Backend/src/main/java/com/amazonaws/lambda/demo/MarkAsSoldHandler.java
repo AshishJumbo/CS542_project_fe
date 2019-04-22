@@ -32,7 +32,7 @@ public class MarkAsSoldHandler implements RequestStreamHandler {
             if (event.get("carId") != null) {
                 carId = Integer.parseInt((String) event.get("carId"));
             }
-            if (carId == -1 || carId == -1) {
+            if (carId == -1) {
                 throw new Exception("Invalid input to mark car as sold from car list");
             }
 

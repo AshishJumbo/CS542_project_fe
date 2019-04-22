@@ -37,6 +37,7 @@ public class GetSelllist implements RequestStreamHandler {
             JSONObject vehicleList = getSelllist(userId, context);
 
             JSONObject responseBody = new JSONObject();
+//            responseBody.put("input", event.toString());
             responseBody.put("vehicleList", vehicleList.toString());
 
             responseJson.put("isBase64Encoded", false);
@@ -68,7 +69,7 @@ public class GetSelllist implements RequestStreamHandler {
 
             //	Add new car
             String listVehicle = String.format(
-                    "select car.id, car.year, make.name, model.name, trim.name, car.vin, car.mile, car.color, car.price, car.description, car.img_name, car.date" +
+                    "select car.id, car.year, make.name, model.name, trim.name, car.vin, car.mile, car.color, car.price, car.description, car.date" +
                             " from innodb.Car as car inner join innodb.Make as make on car.makeId = make.id inner join innodb.Model as model on car.modelId = model.id inner join innodb.Trim as trim on car.trimId = trim.id " +
                             " where car.userId = '%d' and car.isSold = 0", userId);
             ResultSet resultSet = stmt.executeQuery(listVehicle);
@@ -86,7 +87,6 @@ public class GetSelllist implements RequestStreamHandler {
                 vehicle.put("color", resultSet.getString("car.color"));
                 vehicle.put("price", resultSet.getInt("car.price"));
                 vehicle.put("description", resultSet.getString("car.description"));
-                vehicle.put("imgName", resultSet.getString("car.img_name"));
                 vehicle.put("date", resultSet.getString("car.date"));
                 vehicleList.add(vehicle);
             }

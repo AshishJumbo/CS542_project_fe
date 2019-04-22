@@ -12,14 +12,7 @@ $(document).ready(function () {
         }
     };
 
-    $(".mark_as_sold_button").click(function(){
-        let values = {"carId":$(this).val()};
-        console.log("Mark_as_sold pressed, carId=");
-        console.log(values);
-    });
-    $(".remove_from_watchlist_button").click(function(){
 
-    });
 
     $("#modal-cancel").click(function () {
         modal.style.display = 'none';
@@ -47,6 +40,30 @@ $(document).ready(function () {
         localStorage.clear();
         check_login_status();
         window.location = 'index.html';
+    });
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    $("#side-bar-my-account").click(function () {
+        $('#account-details-content').show(0);
+        $('#list-container').hide(0);
+        $('#watchlist-container').hide(0);
+        return false;
+    });
+    $("#side-bar-my-listings").click(function () {
+        $('#list-container').show(0);
+        $('#account-details-content').hide(0);
+        $('#watchlist-container').hide(0);
+        populateResponse(sell_list_global, watch_list_global);
+        return false;
+    });
+    $("#side-bar-my-watchlist").click(function () {
+        $('#watchlist-container').show(0);
+        $('#account-details-content').hide(0);
+        $('#list-container').hide(0);
+        populateResponse(sell_list_global, watch_list_global);
+        return false;
     });
 
     // TODO: T0mi: These 3 functions are required for login in all scripts.
@@ -96,10 +113,10 @@ $(document).ready(function () {
         $login_status_box = $("#login_status_box").html(login_cliche);
         // If logged in, display "Username"
         let userId = getItem("userId");
-        console.log("Read cookie with UserID=" + userId);
+        // console.log("Read cookie with UserID=" + userId);
         if (userId != "Fail login" && userId != null) {
             // Logged in.
-            console.log("CLS: user_name cliche")
+            // console.log("CLS: user_name cliche")
             $login_status_box.html("");
             $login_status_box.append(username_cliche);
             $("#user_info_box").html("<li>User ID="+localStorage.getItem("userId")+"</li><li>User Name="+localStorage.getItem("userName")+"</li>" +
@@ -130,31 +147,7 @@ $(document).ready(function () {
 
     let imglnk = "http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg";
 
-    $("#menu-toggle").click(function (e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    $("#side-bar-my-account").click(function () {
-        $('#account-details-content').show(0);
-        $('#list-container').hide(0);
-        $('#watchlist-container').hide(0);
-        return false;
-    });
-    $("#side-bar-my-listings").click(function () {
-        $('#list-container').show(0);
-        $('#account-details-content').hide(0);
-        $('#watchlist-container').hide(0);
-        populateResponse(sell_list_global, watch_list_global);
-        return false;
-    });
-    $("#side-bar-my-watchlist").click(function () {
-        console.log("show watchlist");
-        $('#watchlist-container').show(0);
-        $('#account-details-content').hide(0);
-        $('#list-container').hide(0);
-        populateResponse(sell_list_global, watch_list_global);
-        return false;
-    });
+
     console.log("log from user.js");
 
     let divCarInfo;
@@ -172,6 +165,7 @@ $(document).ready(function () {
                 let values={"userId":localStorage.getItem("userId")};
                 get_sell_list_DB(values);
                 populateResponse(sell_list_global, watch_list_global);
+                bootbox.alert("Congratulation!!! The car has been marked as sold.");
             },
             complete: function () {
                 console.log("mark_as_sold request made to server");
@@ -193,6 +187,7 @@ $(document).ready(function () {
                 let values={"userId":localStorage.getItem("userId")};
                 get_watch_list_DB(values);
                 populateResponse(sell_list_global, watch_list_global);
+                bootbox.alert("You have removed the car from your watchlist!");
             },
             complete: function () {
                 console.log("remove_watchlist request made to server");
@@ -214,8 +209,8 @@ $(document).ready(function () {
             success: function (data) {
 
                 watch_list_global = JSON.parse(JSON.parse(data.body).vehicleList).vehicles;
-                console.log("watchlist get:");
-                console.log(watch_list_global);
+                // console.log("watchlist get:");
+                // console.log(watch_list_global);
             },
             complete: function () {
                 console.log("watchlist get request made to server");
@@ -236,8 +231,8 @@ $(document).ready(function () {
             success: function (data) {
 
                 sell_list_global = JSON.parse(JSON.parse(data.body).vehicleList).vehicles;
-                console.log("sell list get:");
-                console.log(sell_list_global);
+                // console.log("sell list get:");
+                // console.log(sell_list_global);
             },
             complete: function () {
                 console.log("sell list get request made to server");
@@ -267,7 +262,7 @@ $(document).ready(function () {
                 ' Price :  ' + car.price + '<br/>' +
                 ' Year :  ' + car.year + '<br/>' +
                 ' Mileage :  ' + car.mile +
-                '<button class="mark_as_sold_button" value=car.carId>Mark as Sold</button>' +
+                '<button class="mark_as_sold_button" type="button" value="'+car.carId+'">Mark as Sold</button>' +
                 '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
                 '</div>' +
                 '</div>' +
@@ -276,8 +271,6 @@ $(document).ready(function () {
                 '<div class="collapse multi-collapse" id="info'+i+'">' +
                 '<div class="card card-body">' +
                 ' Description :  ' + car.description + '<br/>' +
-                ' Contact Info :  ' + car.email + '<br/>' +
-                ' modelId :  ' + car.modelId + '<br/>' +
                 '</div></div></div></div></div>';
             $("#selllist").append(divCarInfo);
 
@@ -297,7 +290,7 @@ $(document).ready(function () {
                 ' Price :  ' + car.price + '<br/>' +
                 ' Year :  ' + car.year + '<br/>' +
                 ' Mileage :  ' + car.mile +
-                '<button class="remove_from_watchlist_button" value=car.carId">Remove From Watchlist</button>' +
+                '<button class="remove_from_watchlist_button" type="button" value="'+car.carId+'"">Remove From Watchlist</button>' +
                 '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#infoo' + j + '" aria-expanded="false" aria-controls="infoo' + j + '">More Info</button>' +
                 '</div>' +
                 '</div>' +
@@ -307,18 +300,33 @@ $(document).ready(function () {
                 '<div class="card card-body">' +
                 ' Description :  ' + car.description + '<br/>' +
                 ' Contact Info :  ' + car.email + '<br/>' +
-                ' modelId :  ' + car.modelId + '<br/>' +
                 '</div></div></div></div></div>';
             $("#watchlist").append(divCarInfo);
         }
-
         $(".car_more_info_button").click(function () {
-            var $this = $(this);
+            let $this = $(this);
             if ($this.html() == "More Info") {
                 $this.html("Less Info");
             } else {
                 $this.html("More Info");
             }
+        });
+        $(".mark_as_sold_button").click(function(){
+            let $this = $(this);
+            let values = {"carId":$this.val()};
+            mark_Sold_DB(values);
+            populateResponse(sell_list_global, watch_list_global);
+            // console.log("Mark_as_sold pressed, carId=");
+            // console.log(values);
+        });
+        $(".remove_from_watchlist_button").click(function(){
+            let userId = localStorage.getItem("userId");
+            let $this = $(this);
+            let values= {"userId":userId, "carId":$this.val()};
+            remove_Watchlist_DB(values);
+            populateResponse(sell_list_global, watch_list_global);
+            // console.log("Remove_from_watchlist pressed, values=");
+            // console.log(values);
         });
     }
 

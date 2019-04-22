@@ -119,7 +119,7 @@
 }
 
 /* The Modal (background) */
-.modal {
+.modall {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -238,26 +238,38 @@ button:hover {
     }
 }
 
-
-.add_to_watchlist {
+.add_to_watchlist{
     position: absolute;
-    top: 0%;
-    right: 1%;
-    width: 6%;
-    cursor: pointer;
-    border-radius: 50%;
-    z-index: 10;
-    max-width: 70px;
+    width: 25%;
+    bottom: 5%;
+    /*width: 4vmin;*/
+    /*height: 4vmin;*/
+    border-top: solid 1px solid #eee;
+    right: 3%;
+    text-align: center;
+    background-color: purple;
+    color: #fff;
+    border-radius: 10px;
 }
+/*.add_to_watchlist {*/
+/*    position: absolute;*/
+/*    top: 0%;*/
+/*    right: 1%;*/
+/*    width: 6%;*/
+/*    cursor: pointer;*/
+/*    border-radius: 50%;*/
+/*    z-index: 10;*/
+/*    max-width: 70px;*/
+/*}*/
 
-.add_to_watchlist:hover, .add_to_watchlist:active {
-    filter: drop-shadow(0 0 1px #7AD7F0);
-}
+/*.add_to_watchlist:hover, .add_to_watchlist:active {*/
+/*    filter: drop-shadow(0 0 1px #7AD7F0);*/
+/*}*/
 
-.add_to_watchlist:active {
-    filter: drop-shadow(0 0 1px #7AD7F0);
-    margin-top: 3px;
-}
+/*.add_to_watchlist:active {*/
+/*    filter: drop-shadow(0 0 1px #7AD7F0);*/
+/*    margin-top: 3px;*/
+/*}*/
 
 .pageloading {
     position: relative;

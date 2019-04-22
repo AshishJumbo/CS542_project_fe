@@ -34,10 +34,10 @@ public class RemoveFromWatchlistHandler implements RequestStreamHandler {
                 userId = Integer.parseInt((String) event.get("userId"));
             }
             if (event.get("carId") != null) {
-                userId = Integer.parseInt((String) event.get("carId"));
+                carId = Integer.parseInt((String) event.get("carId"));
             }
             if (userId == -1 || carId == -1) {
-                throw new Exception("Invalid input to remove item from watch list, with userId="+userId+", carId="+carId);
+                throw new Exception("Invalid input to remove item from watch list, with userId="+ userId +", carId="+carId);
             }
 
             removeFromWatchList(userId, carId, context);
@@ -46,7 +46,7 @@ public class RemoveFromWatchlistHandler implements RequestStreamHandler {
             responseBody.put("input", event.toString());
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
-//            responseJson.put("body", responseBody.toString());
+            responseJson.put("body", responseBody.toString());
 
         } catch (Exception pex) {
             logger.log(pex.toString());
@@ -70,7 +70,7 @@ public class RemoveFromWatchlistHandler implements RequestStreamHandler {
             Statement stmt = conn.createStatement();
 
             //	update statement
-            String update = String.format("DELETE FROM innodb.Watchlist WHERE userId = '%d' and carId = '%d';", userId, carId);
+            String update = String.format("DELETE FROM innodb.Watchlist WHERE userId = %d and carId = %d ;", userId, carId);
             stmt.executeUpdate(update);
 
 
