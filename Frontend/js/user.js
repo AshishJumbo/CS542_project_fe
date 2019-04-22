@@ -182,33 +182,33 @@ $(document).ready(function () {
         $carsContainer.append(divCarInfo);
     }
 
-    // $.ajax({
-    //     type: 'GET',
-    //     url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-    //     crossDomain: true,
-    //     contentType: 'application/json',
-    //     dataType: 'json',
-    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
-    //
-    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
-    //     success: function (data, status) {
-    //         // console.log(data);
-    //         // populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));
-    //         makeList = JSON.parse(JSON.parse(sample_response.body).vehicleList).vehicles;
-    //         populateResponse(makeList);
-    //     },
-    //     complete: function () {
-    //         console.log("Post request made to server");
-    //         // $dialog_container.hide(0);
-    //         // $delete_event_dialog.hide(0);
-    //         // loadCalendarInfo(selected_calendar);
-    //     },
-    //     error: function (error) {
-    //         console.log("FAIL....=================");
-    //     }
-    // });
+    $.ajax({
+        type: 'GET',
+        url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
+        crossDomain: true,
+        contentType: 'application/json',
+        dataType: 'json',
+        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
+
+        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
+        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
+        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
+        success: function (data, status) {
+            // console.log(data);
+            // populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));
+            makeList = JSON.parse(JSON.parse(sample_response.body).vehicleList).vehicles;
+            populateResponse(makeList);
+        },
+        complete: function () {
+            console.log("Post request made to server");
+            // $dialog_container.hide(0);
+            // $delete_event_dialog.hide(0);
+            // loadCalendarInfo(selected_calendar);
+        },
+        error: function (error) {
+            console.log("FAIL....=================");
+        }
+    });
 
     function populateResponse(cars) {
         $selllistContainer = $("#selllist").html('');//<h1 class="mt-4">Sell List</h1>

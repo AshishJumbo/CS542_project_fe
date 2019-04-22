@@ -122,7 +122,7 @@ function viewAlbum(albumName) {
       '<div>',
         getHtml(photos),
       '</div>',
-      '<input id="img_name" type="file" accept="image/*">',
+      '<input id="photoupload" type="file" accept="image/*">',
       '<button id="addphoto" onclick="addPhoto(\'' + albumName +'\')">',
         'Add Photo',
       '</button>',
@@ -135,7 +135,7 @@ function viewAlbum(albumName) {
 }
 
 function addPhoto(albumName) {
-  var files = document.getElementById('img_name').files;
+  var files = document.getElementById('photoupload').files;
   if (!files.length) {
     return alert('Please choose a file to upload first.');
   }
@@ -152,8 +152,8 @@ function addPhoto(albumName) {
     if (err) {
       return alert('There was an error uploading your photo: ', err.message);
     }
-    // alert('Successfully uploaded photo.');
-    // viewAlbum(albumName);
+    alert('Successfully uploaded photo.');
+    viewAlbum(albumName);
   });
 }
 
@@ -187,3 +187,9 @@ function deleteAlbum(albumName) {
     });
   });
 }
+
+function getHtml(template) {
+   return template.join('\n');
+}
+
+listAlbums();

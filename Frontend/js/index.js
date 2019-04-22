@@ -39,6 +39,7 @@ $(document).ready(function () {
 
 
     let imglnk = "http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg";
+    imglnk = "https://s3.us-east-2.amazonaws.com/car-images-cs542/car-images//";
     var addToWatchlist = "images/add-to-watch2.png";
 
 // Get the modal
@@ -246,7 +247,7 @@ $(document).ready(function () {
             }
             divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
                 '<div class="row">' +
-                '<img class="car_info_image" src="' + imglnk + '">' +
+                '<img class="car_info_image" src="' + imglnk+car.img_name.trim() + '">' +
                 '<div class="car_info_details align-middle">' +
                 ' Make :  ' + car.make + '<br/>' +
                 ' Model :  ' + car.model + '<br/>' +

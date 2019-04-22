@@ -35,7 +35,7 @@ $(document).ready(function () {
         }
     }
 
-    $("#imgInp").change(function(){
+    $("#img_name").change(function(){
         readURL(this);
     });
     /* NOTE: Ashish mod ends */
@@ -67,8 +67,10 @@ $(document).ready(function () {
         $inputs.each(function () {
             values[this.id] = $(this).val();
         });
+        values['img_name'] = $('input[type=file]').val().split('\\').pop();
         values['userId'] = localStorage.getItem("userId");
         console.log(values);
+        addPhoto('car-images');
         add_car_DB(values);
         // return false;
     });
@@ -236,6 +238,7 @@ $(document).ready(function () {
             complete: function () {
                 console.log("Post request made to server");
                 $('#new-car').trigger('reset');
+                $('#img-upload').attr('src','');
             },
             error: function () {
                 console.log("FAIL....=================");
