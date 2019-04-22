@@ -80,7 +80,20 @@
     box-shadow: 0 0 10px #aaa;
 }
 
-.car_purchase_button {
+.mark_as_sold_button {
+    position: absolute;
+    width: 25%;
+    bottom: 5%;
+    /*width: 4vmin;*/
+    /*height: 4vmin;*/
+    border-top: solid 1px solid #eee;
+    right: 3%;
+    text-align: center;
+    background-color: purple;
+    color: #fff;
+    border-radius: 10px;
+}
+.remove_from_watchlist_button {
     position: absolute;
     width: 25%;
     bottom: 5%;
