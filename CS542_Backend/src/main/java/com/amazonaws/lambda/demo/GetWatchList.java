@@ -75,7 +75,7 @@ public class GetWatchList implements RequestStreamHandler {
 
             //	Add new car
             String listVehicle = String.format("select car.id, car.year, car.makeId, make.name, car.modelId, model.name, car.trimId, trim.name,\n" +
-                    "car.vin, car.mile, car.color, car.price, car.description, car.date\n" +
+                    "car.vin, car.mile, car.color, car.price, car.description, car.date, car.img_name\n" +
                     "from (select watchlist.carId from innodb.Watchlist as watchlist where watchlist.userId = '%d') as temp1\n" +
                     "inner join innodb.Car as car on temp1.carId = car.id\n" +
                     "inner join innodb.Make as make on car.makeId = make.id\n" +
@@ -100,6 +100,7 @@ public class GetWatchList implements RequestStreamHandler {
                 vehicle.put("color", resultSet.getString("car.color"));
                 vehicle.put("date", resultSet.getString("car.date"));
                 vehicle.put("description", resultSet.getString("car.description"));
+                vehicle.put("img_name", resultSet.getString("car.img_name"));
                 vehicleList.add(vehicle);
             }
 

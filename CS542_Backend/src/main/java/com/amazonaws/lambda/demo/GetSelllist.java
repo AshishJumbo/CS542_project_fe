@@ -69,7 +69,7 @@ public class GetSelllist implements RequestStreamHandler {
 
             //	Add new car
             String listVehicle = String.format(
-                    "select car.id, car.year, make.name, model.name, trim.name, car.vin, car.mile, car.color, car.price, car.description, car.date" +
+                    "select car.id, car.year, make.name, model.name, trim.name, car.vin, car.mile, car.color, car.price, car.description, car.date, car.img_name" +
                             " from innodb.Car as car inner join innodb.Make as make on car.makeId = make.id inner join innodb.Model as model on car.modelId = model.id inner join innodb.Trim as trim on car.trimId = trim.id " +
                             " where car.userId = '%d' and car.isSold = 0", userId);
             ResultSet resultSet = stmt.executeQuery(listVehicle);
@@ -88,6 +88,7 @@ public class GetSelllist implements RequestStreamHandler {
                 vehicle.put("price", resultSet.getInt("car.price"));
                 vehicle.put("description", resultSet.getString("car.description"));
                 vehicle.put("date", resultSet.getString("car.date"));
+                vehicle.put("img_name", resultSet.getString("car.img_name"));
                 vehicleList.add(vehicle);
             }
 
