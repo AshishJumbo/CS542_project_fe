@@ -175,11 +175,6 @@ $(document).ready(function () {
         crossDomain: true,
         contentType: 'application/json',
         dataType: 'json',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
-
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-        // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
 
         success: function (data, status) {
             data_global = JSON.parse(JSON.parse(data.body).vehicleList);
@@ -190,10 +185,6 @@ $(document).ready(function () {
         },
         complete: function () {
             console.log("Post request made to server");
-            // $dialog_container.hide(0);
-            // $delete_event_dialog.hide(0);
-            // loadCalendarInfo(selected_calendar);
-            // getWatchlist();
         },
         error: function (error) {
             console.log("FAIL....=================");
@@ -208,13 +199,6 @@ $(document).ready(function () {
             crossDomain: true,
             contentType: 'application/json',
             dataType: 'json',
-            // data: JSON.stringify(data),
-            // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
-
-            // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-            // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-            // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
-
             success: function (data, status) {
                 console.log(data);
                 alreadyInWatchlist(data);
@@ -248,6 +232,7 @@ $(document).ready(function () {
                 '<div class="row">' +
                 '<img class="car_info_image" src="' + imglnk + '">' +
                 '<div class="car_info_details align-middle">' +
+                ' Add Date :  ' + car.date + '<br/>' +
                 ' Make :  ' + car.make + '<br/>' +
                 ' Model :  ' + car.model + '<br/>' +
                 ' Price :  ' + car.price + '<br/>' +

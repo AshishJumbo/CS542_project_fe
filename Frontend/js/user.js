@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    let sell_list_global;
+    let watch_list_global;
+
     check_login_status(); // checks the status for login box content
     // Get the modal
     let modal = document.getElementById('login-modal');
@@ -8,6 +11,15 @@ $(document).ready(function () {
             modal.style.display = "none";
         }
     };
+
+    $(".mark_as_sold_button").click(function(){
+        let values = {"carId":$(this).val()};
+        console.log("Mark_as_sold pressed, carId=");
+        console.log(values);
+    });
+    $(".remove_from_watchlist_button").click(function(){
+
+    });
 
     $("#modal-cancel").click(function () {
         modal.style.display = 'none';
@@ -36,7 +48,6 @@ $(document).ready(function () {
         check_login_status();
         window.location = 'index.html';
     });
-
 
     // TODO: T0mi: These 3 functions are required for login in all scripts.
     // auth_user(): action for "login" button onClick event
@@ -93,6 +104,19 @@ $(document).ready(function () {
             $login_status_box.append(username_cliche);
             $("#user_info_box").html("<li>User ID="+localStorage.getItem("userId")+"</li><li>User Name="+localStorage.getItem("userName")+"</li>" +
                 "<li>User Email="+localStorage.getItem("email")+"</li>");
+            let values={};
+            values['userId']=getItem("userId");
+            console.log("CLS: Logged in, sending values object to DB:");
+            console.log(values);
+            if(sell_list_global==null && watch_list_global==null)
+            {
+                get_sell_list_DB(values);
+                get_watch_list_DB(values);
+
+            }
+            else{
+                populateResponse(sell_list_global, watch_list_global);
+            }
         }
     }
 
@@ -104,20 +128,7 @@ $(document).ready(function () {
         return localStorage.getItem(cname);
     }
 
-
-    let data = {
-        'cars': []
-    };
-    var data_global;
-    var filter_global;
-    let filters = ['make', 'model', 'color'];
-
     let imglnk = "http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg";
-    var sample_response = {
-        "isBase64Encoded": false,
-        "body": "{\"input\":\"{}\",\"vehicleList\":\"{\\\"vehicles\\\":[{\\\"makeId\\\":\\\"3\\\",\\\"trim\\\":\\\"Sport\\\",\\\"trimId\\\":\\\"1\\\",\\\"year\\\":\\\"2019\\\",\\\"modelId\\\":\\\"7\\\",\\\"price\\\":\\\"35000\\\",\\\"mile\\\":4000,\\\"description\\\":\\\"Please contact me if you are interested\\\",\\\"model\\\":\\\"MX-5\\\",\\\"make\\\":\\\"Mazda\\\",\\\"email\\\":\\\"kshao2@wpi.edu\\\",\\\"carId\\\":\\\"3\\\"},{\\\"makeId\\\":\\\"1\\\",\\\"trim\\\":\\\"Hybrid\\\",\\\"trimId\\\":\\\"12\\\",\\\"year\\\":\\\"2015\\\",\\\"modelId\\\":\\\"2\\\",\\\"price\\\":\\\"29987\\\",\\\"mile\\\":29938,\\\"description\\\":\\\"A bargain. Please contact me for more information!\\\",\\\"model\\\":\\\"Camry\\\",\\\"make\\\":\\\"Toyota\\\",\\\"email\\\":\\\"wlm3@wpi.edu\\\",\\\"carId\\\":\\\"4\\\"},{\\\"makeId\\\":\\\"1\\\",\\\"trim\\\":\\\"Limited\\\",\\\"trimId\\\":\\\"16\\\",\\\"year\\\":\\\"2014\\\",\\\"modelId\\\":\\\"2\\\",\\\"price\\\":\\\"25699\\\",\\\"mile\\\":46771,\\\"description\\\":\\\"Contact ackme@wpi.edu plz.\\\",\\\"model\\\":\\\"Camry\\\",\\\"make\\\":\\\"Toyota\\\",\\\"email\\\":\\\"wlm5@wpi.edu\\\",\\\"carId\\\":\\\"6\\\"},{\\\"makeId\\\":\\\"4\\\",\\\"trim\\\":\\\"EX-L\\\",\\\"trimId\\\":\\\"9\\\",\\\"year\\\":\\\"2008\\\",\\\"modelId\\\":\\\"10\\\",\\\"price\\\":\\\"20199\\\",\\\"mile\\\":92039,\\\"description\\\":\\\"A nice car, it runs perfectly and the brake pads are new. Please let me know if you are interested. erk3@wpi.edu\\\",\\\"model\\\":\\\"Accord\\\",\\\"make\\\":\\\"Honda\\\",\\\"email\\\":\\\"test.wpi.edu\\\",\\\"carId\\\":\\\"7\\\"},{\\\"makeId\\\":\\\"4\\\",\\\"trim\\\":\\\"EX\\\",\\\"trimId\\\":\\\"7\\\",\\\"year\\\":\\\"2003\\\",\\\"modelId\\\":\\\"10\\\",\\\"price\\\":\\\"8700\\\",\\\"mile\\\":100392,\\\"description\\\":\\\"You can contact brm12@wpi.edu for testdrive.\\\",\\\"model\\\":\\\"Accord\\\",\\\"make\\\":\\\"Honda\\\",\\\"email\\\":\\\"admin@wpi-car.com\\\",\\\"carId\\\":\\\"8\\\"}]}\"}",
-        "statusCode": "200"
-    };
 
     $("#menu-toggle").click(function (e) {
         e.preventDefault();
@@ -133,115 +144,172 @@ $(document).ready(function () {
         $('#list-container').show(0);
         $('#account-details-content').hide(0);
         $('#watchlist-container').hide(0);
+        populateResponse(sell_list_global, watch_list_global);
         return false;
     });
     $("#side-bar-my-watchlist").click(function () {
+        console.log("show watchlist");
         $('#watchlist-container').show(0);
         $('#account-details-content').hide(0);
         $('#list-container').hide(0);
+        populateResponse(sell_list_global, watch_list_global);
         return false;
     });
-
-
-    var json = JSON.parse(sample_response.body);
-    console.log(json);
-
     console.log("log from user.js");
-    let cars = data.cars;
-    console.log(cars.length);
-    let $selllistContainer = $("#selllist").html('<h1 class="mt-4">Sell List</h1>');
-    let $watchlistContainer = $("#watchlist").html('<h1 class="mt-4">Watch List</h1>');
 
     let divCarInfo;
     let divBreak = '<div class="w-100"></div>';
 
-    // TODO: agurung clear this during clean up.
-    for (let i = 0; i < cars.length; i++) {
-        let car = cars[i];
-        if (i > 0 && i % 2 == 0) {
-            $carsContainer.append(divBreak);
-        }
-        divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
-            '<div class="row">' +
-            '<img class="car_info_image" src="' + car.links[0] + '">' +
-            '<div class="car_info_details align-middle">' +
-            car.owner + '<br/>' +
-            car['contact-info'] + '<br/>' +
-            car['car-type'] + '<br/>' +
-            car.Manufacturer +
-            '<button class="car_purchase_button">Buy</button>' +
-            '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">More Info</button>' +
-            '</div>' +
-            '</div>' +
-            '<div class="row row_custom_info">' +
-            '<div class="col">' +
-            '<div class="collapse multi-collapse" id="multiCollapseExample1">' +
-            '<div class="card card-body">' +
-            'Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.' +
-            '</div></div></div></div></div>';
-        $carsContainer.append(divCarInfo);
+    function mark_Sold_DB(data){
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/markassold',
+            crossDomain: true,
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function () {
+                let values={"userId":localStorage.getItem("userId")};
+                get_sell_list_DB(values);
+                populateResponse(sell_list_global, watch_list_global);
+            },
+            complete: function () {
+                console.log("mark_as_sold request made to server");
+            },
+            error: function () {
+                console.log("FAIL....=================");
+            }
+        });
     }
+    function remove_Watchlist_DB(data){
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/removefromwatchlist',
+            crossDomain: true,
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function () {
+                let values={"userId":localStorage.getItem("userId")};
+                get_watch_list_DB(values);
+                populateResponse(sell_list_global, watch_list_global);
+            },
+            complete: function () {
+                console.log("remove_watchlist request made to server");
+            },
+            error: function () {
+                console.log("FAIL....=================");
+            }
+        });
 
-    // $.ajax({
-    //     type: 'GET',
-    //     url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-    //     crossDomain: true,
-    //     contentType: 'application/json',
-    //     dataType: 'json',
-    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getcars',
-    //
-    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addwatchlist',
-    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
-    //     // url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/addcar',
-    //     success: function (data, status) {
-    //         // console.log(data);
-    //         // populateResponse(JSON.parse(JSON.parse(data.body).vehicleList));
-    //         makeList = JSON.parse(JSON.parse(sample_response.body).vehicleList).vehicles;
-    //         populateResponse(makeList);
-    //     },
-    //     complete: function () {
-    //         console.log("Post request made to server");
-    //         // $dialog_container.hide(0);
-    //         // $delete_event_dialog.hide(0);
-    //         // loadCalendarInfo(selected_calendar);
-    //     },
-    //     error: function (error) {
-    //         console.log("FAIL....=================");
-    //     }
-    // });
+    }
+    function get_watch_list_DB(data){
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getwatchlist',
+            crossDomain: true,
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
 
-    function populateResponse(cars) {
-        $selllistContainer = $("#selllist").html('');//<h1 class="mt-4">Sell List</h1>
-        $watchlistContainer = $("#watchlist").html('');//<h1 class="mt-4">Watch List</h1>
-        for (let i = 0; i < cars.length; i++) {
-            let car = cars[i];
+                watch_list_global = JSON.parse(JSON.parse(data.body).vehicleList).vehicles;
+                console.log("watchlist get:");
+                console.log(watch_list_global);
+            },
+            complete: function () {
+                console.log("watchlist get request made to server");
+            },
+            error: function () {
+                console.log("FAIL....=================");
+            }
+        });
+    }
+    function get_sell_list_DB(data){
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            url: 'https://w3vss4ok71.execute-api.us-east-2.amazonaws.com/cars/getselllist',
+            crossDomain: true,
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
+
+                sell_list_global = JSON.parse(JSON.parse(data.body).vehicleList).vehicles;
+                console.log("sell list get:");
+                console.log(sell_list_global);
+            },
+            complete: function () {
+                console.log("sell list get request made to server");
+            },
+            error: function () {
+                console.log("FAIL....=================");
+            }
+        });
+    }
+    function populateResponse(sellList, watchList) {
+        console.log("Populating sellList and watchList:");
+        $("#selllist").html('');
+        $("#watchlist").html('');
+        for (let i = 0; i < sellList.length; i++) {
+            let car = sellList[i];
             if (i > 0 && i % 2 == 0) {
-                $selllistContainer.append(divBreak);
-                $watchlistContainer.append(divBreak);
+                $("#selllist").append(divBreak);
+
             }
             divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
                 '<div class="row">' +
-                '<img class="car_info_image" src="' + imglnk + '">' +
+                '<img class="car_info_image" src="' + car.imgName + '">' +
                 '<div class="car_info_details align-middle">' +
+                ' Add Date :  ' + car.date + '<br/>' +
                 ' Make :  ' + car.make + '<br/>' +
                 ' Model :  ' + car.model + '<br/>' +
                 ' Price :  ' + car.price + '<br/>' +
                 ' Year :  ' + car.year + '<br/>' +
                 ' Mileage :  ' + car.mile +
-                '<button class="car_purchase_button">Sold</button>' +
-                '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">Remove from list</button>' +
+                '<button class="mark_as_sold_button" value=car.carId>Mark as Sold</button>' +
+                '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
                 '</div>' +
                 '</div>' +
                 '<div class="row row_custom_info">' +
                 '<div class="col">' +
-                '<div class="collapse multi-collapse" id="multiCollapseExample1">' +
+                '<div class="collapse multi-collapse" id="info'+i+'">' +
                 '<div class="card card-body">' +
                 ' Description :  ' + car.description + '<br/>' +
                 ' Contact Info :  ' + car.email + '<br/>' +
                 ' modelId :  ' + car.modelId + '<br/>' +
                 '</div></div></div></div></div>';
-            $selllistContainer.append(divCarInfo);
-            $watchlistContainer.append(divCarInfo);
+            $("#selllist").append(divCarInfo);
+
+        }
+        for (let j = 0; j < watchList.length; j++) {
+            let car = watchList[j];
+            if (j > 0 && j % 2 == 0) {
+                $("#watchlist").append(divBreak);
+            }
+            divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
+                '<div class="row">' +
+                '<img class="car_info_image" src="' + car.imgName + '">' +
+                '<div class="car_info_details align-middle">' +
+                ' Owner :  ' + car.userName + '<br/>' +
+                ' Make :  ' + car.make + '<br/>' +
+                ' Model :  ' + car.model + '<br/>' +
+                ' Price :  ' + car.price + '<br/>' +
+                ' Year :  ' + car.year + '<br/>' +
+                ' Mileage :  ' + car.mile +
+                '<button class="remove_from_watchlist_button" value=car.carId">Remove From Watchlist</button>' +
+                '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#infoo' + j + '" aria-expanded="false" aria-controls="infoo' + j + '">More Info</button>' +
+                '</div>' +
+                '</div>' +
+                '<div class="row row_custom_info">' +
+                '<div class="col">' +
+                '<div class="collapse multi-collapse" id="infoo'+j+'">' +
+                '<div class="card card-body">' +
+                ' Description :  ' + car.description + '<br/>' +
+                ' Contact Info :  ' + car.email + '<br/>' +
+                ' modelId :  ' + car.modelId + '<br/>' +
+                '</div></div></div></div></div>';
+            $("#watchlist").append(divCarInfo);
         }
 
         $(".car_more_info_button").click(function () {
@@ -254,36 +322,4 @@ $(document).ready(function () {
         });
     }
 
-    function populateWatchlistResponse(data) {
-        cars = data.vehicles;
-        $watchlistContainer.html("");
-        for (let i = 0; i < cars.length; i++) {
-            let car = cars[i];
-            if (i > 0 && i % 2 == 0) {
-                $watchlistContainer.append(divBreak);
-            }
-            divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
-                '<div class="row">' +
-                '<img class="car_info_image" src="' + imglnk + '">' +
-                '<div class="car_info_details align-middle">' +
-                ' Make :  ' + car.make + '<br/>' +
-                ' Model :  ' + car.model + '<br/>' +
-                ' Price :  ' + car.price + '<br/>' +
-                ' Year :  ' + car.year + '<br/>' +
-                ' Mileage :  ' + car.mile +
-                '<button class="car_purchase_button">Buy</button>' +
-                '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">More Info</button>' +
-                '</div>' +
-                '</div>' +
-                '<div class="row row_custom_info">' +
-                '<div class="col">' +
-                '<div class="collapse multi-collapse" id="multiCollapseExample1">' +
-                '<div class="card card-body">' +
-                ' Description :  ' + car.description + '<br/>' +
-                ' Contact Info :  ' + car.email + '<br/>' +
-                ' modelId :  ' + car.modelId + '<br/>' +
-                '</div></div></div></div></div>';
-            $watchlistContainer.append(divCarInfo);
-        }
-    }
 });

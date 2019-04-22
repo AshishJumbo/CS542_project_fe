@@ -83,16 +83,16 @@ $(document).ready(function () {
     $("#makeId").mousedown(function () {
         populateMakes(makeList_global);
     });
-    $("#makeId").change(function(){
+    $("#makeId").change(function () {
         console.log("Changed makeID");
         $("#modelId").html("");
-        modelList_global=null;
+        modelList_global = null;
     });
     $("#modelId").mouseenter(function () {
         let makeId = $("#makeId").val();
-        if(makeId!="-" && modelList_global==null){
-            let values={};
-            values['makeId']=makeId;
+        if (makeId != "-" && modelList_global == null) {
+            let values = {};
+            values['makeId'] = makeId;
             get_model_DB(values);
             console.log("makeId={" + values.makeId);
         }
@@ -100,16 +100,16 @@ $(document).ready(function () {
     $("#modelId").mousedown(function () {
         populateModels(modelList_global);
     });
-    $("#modelId").change(function(){
+    $("#modelId").change(function () {
         console.log("Changed modelId");
         $("#trimId").html("");
-        trimList_global=null;
+        trimList_global = null;
     });
     $("#trimId").mouseenter(function () {
         let modelId = $("#modelId").val();
-        if((modelId!="-"||modelId!="") && trimList_global==null){
-            let values={};
-            values['modelId']=modelId;
+        if ((modelId != "-" || modelId != "") && trimList_global == null) {
+            let values = {};
+            values['modelId'] = modelId;
             get_trim_DB(values);
             console.log("modelId={" + values.modelId);
         }
@@ -137,23 +137,26 @@ $(document).ready(function () {
             $("#makeId").append(cliche);
         }
     }
-    function populateModels(models){
+
+    function populateModels(models) {
         $("#modelId").html("");
         let cliche;
         for (let i = 0; i < models.length; i++) {
-            cliche="<option value="+models[i].modelId+">"+models[i].modelName+"</option>";
+            cliche = "<option value=" + models[i].modelId + ">" + models[i].modelName + "</option>";
             $("#modelId").append(cliche);
         }
     }
-    function populateTrims(trims){
+
+    function populateTrims(trims) {
         $("#trimId").html("");
         let cliche;
         for (let i = 0; i < trims.length; i++) {
-            cliche="<option value="+trims[i].trimId+">"+trims[i].trimName+"</option>";
+            cliche = "<option value=" + trims[i].trimId + ">" + trims[i].trimName + "</option>";
             $("#trimId").append(cliche);
         }
     }
-    function get_trim_DB(data){
+
+    function get_trim_DB(data) {
         $.ajax({
             type: 'POST',
             data: JSON.stringify(data),
@@ -165,7 +168,7 @@ $(document).ready(function () {
             success: function (data) {
                 trimList_global = JSON.parse(JSON.parse(data.body).trimList);
                 trimList_global = trimList_global.trims;
-                console.log(data)
+                console.log(trimList_global)
             },
             complete: function () {
                 console.log("Get trim DB request made to server ");
@@ -176,7 +179,8 @@ $(document).ready(function () {
 
         })
     }
-    function get_model_DB(data){
+
+    function get_model_DB(data) {
         $.ajax({
             type: 'POST',
             data: JSON.stringify(data),
@@ -188,7 +192,7 @@ $(document).ready(function () {
             success: function (data) {
                 modelList_global = JSON.parse(JSON.parse(data.body).modelList);
                 modelList_global = modelList_global.models;
-                console.log(data)
+                console.log(modelList_global)
             },
             complete: function () {
                 console.log("Get model DB request made to server ");
@@ -199,6 +203,7 @@ $(document).ready(function () {
 
         })
     }
+
     function get_make_DB() {
         $.ajax({
             type: 'GET',

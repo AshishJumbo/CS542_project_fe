@@ -61,7 +61,7 @@ public class ListVehicleHandler implements RequestStreamHandler {
             Statement stmt = conn.createStatement();
 
             //	Query about every attribute, except the "sold" cars.
-            String listVehicle = "select car.id, car.year, make.name, car.makeId, model.name, car.modelId, trim.name, car.trimId, car.price, car.userId, user.user_name, car.color, car.vin, car.mile, car.description, car.date, user.email\n" +
+            String listVehicle = "select car.id, car.year, make.name, car.makeId, model.name, car.modelId, trim.name, car.trimId, car.price, car.userId, user.user_name, car.color, car.vin, car.mile, car.description, car.img_name, car.date, user.email\n" +
                     "from innodb.Car as car\n" +
                     "inner join innodb.Make as make on car.makeId = make.id\n" +
                     "inner join innodb.Model as model on car.modelId = model.id\n" +
@@ -88,6 +88,7 @@ public class ListVehicleHandler implements RequestStreamHandler {
                 vehicle.put("color", resultSet.getString("car.color"));
                 vehicle.put("mile", resultSet.getInt("car.mile"));
                 vehicle.put("description", resultSet.getString("car.description"));
+                vehicle.put("imgName", resultSet.getString("car.img_name"));
                 vehicle.put("date", resultSet.getString("car.date"));
                 vehicle.put("email", resultSet.getString("user.email"));
                 vehicleList.add(vehicle);
