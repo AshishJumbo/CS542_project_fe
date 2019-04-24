@@ -286,69 +286,77 @@ $(document).ready(function () {
         });
     }
     function populateResponse(sellList, watchList) {
-        console.log("Populating sellList and watchList:");
+        // console.log("Populating sellList and watchList:");
         $("#selllist").html('');
         $("#watchlist").html('');
-        for (let i = 0; i < sellList.length; i++) {
-            let car = sellList[i];
-            if (i > 0 && i % 2 == 0) {
-                $("#selllist").append(divBreak);
+        if(sellList.length > 0){
+            console.log("drawing sell list");
+            for (let i = 0; i < sellList.length; i++) {
+                let car = sellList[i];
+                if (i > 0 && i % 2 == 0) {
+                    $("#selllist").append(divBreak);
+
+                }
+                divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
+                    '<div class="row">' +
+                    '<img class="car_info_image" src="' + imglnk+car.imgName.trim() + '">' +
+                    '<div class="car_info_details align-middle">' +
+                    ' Add Date :  ' + car.date + '<br/>' +
+                    ' Make :  ' + car.make + '<br/>' +
+                    ' Model :  ' + car.model + '<br/>' +
+                    ' Price :  ' + car.price + '<br/>' +
+                    ' Year :  ' + car.year + '<br/>' +
+                    ' Mileage :  ' + car.mile +
+                    '<button class="mark_as_sold_button" type="button" value="'+car.carId+'">Mark as Sold</button>' +
+                    '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="row row_custom_info">' +
+                    '<div class="col">' +
+                    '<div class="collapse multi-collapse" id="info'+i+'">' +
+                    '<div class="card card-body">' +
+                    ' Description :  ' + car.description + '<br/>' +
+                    '</div></div></div></div></div>';
+                $("#selllist").append(divCarInfo);
 
             }
-            divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
-                '<div class="row">' +
-                '<img class="car_info_image" src="' + imglnk+car.imgName.trim() + '">' +
-                '<div class="car_info_details align-middle">' +
-                ' Add Date :  ' + car.date + '<br/>' +
-                ' Make :  ' + car.make + '<br/>' +
-                ' Model :  ' + car.model + '<br/>' +
-                ' Price :  ' + car.price + '<br/>' +
-                ' Year :  ' + car.year + '<br/>' +
-                ' Mileage :  ' + car.mile +
-                '<button class="mark_as_sold_button" type="button" value="'+car.carId+'">Mark as Sold</button>' +
-                '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#info' + i + '" aria-expanded="false" aria-controls="info' + i + '">More Info</button>' +
-                '</div>' +
-                '</div>' +
-                '<div class="row row_custom_info">' +
-                '<div class="col">' +
-                '<div class="collapse multi-collapse" id="info'+i+'">' +
-                '<div class="card card-body">' +
-                ' Description :  ' + car.description + '<br/>' +
-                ' Contact Info :  ' + car.email + '<br/>' +
-                ' modelId :  ' + car.modelId + '<br/>' +
-                '</div></div></div></div></div>';
-            $("#selllist").append(divCarInfo);
-
+        }else if(sellList.length==0){
+            $("#selllist").html('<h5> You have no current listing! Please add new listing from the left tool bar!</h5>');
         }
-        for (let j = 0; j < watchList.length; j++) {
-            let car = watchList[j];
-            if (j > 0 && j % 2 == 0) {
-                $("#watchlist").append(divBreak);
+        if(watchList.length>0){
+            for (let j = 0; j < watchList.length; j++) {
+                let car = watchList[j];
+                if (j > 0 && j % 2 == 0) {
+                    $("#watchlist").append(divBreak);
+                }
+                divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
+                    '<div class="row">' +
+                    '<img class="car_info_image" src="' + imglnk+car.imgName.trim() + '">' +
+                    '<div class="car_info_details align-middle">' +
+                    ' Owner :  ' + car.userName + '<br/>' +
+                    ' Make :  ' + car.make + '<br/>' +
+                    ' Model :  ' + car.model + '<br/>' +
+                    ' Price :  ' + car.price + '<br/>' +
+                    ' Year :  ' + car.year + '<br/>' +
+                    ' Mileage :  ' + car.mile +
+                    '<button class="remove_from_watchlist_button" type="button" value="'+car.carId+'"">Remove From Watchlist</button>' +
+                    '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#infoo' + j + '" aria-expanded="false" aria-controls="infoo' + j + '">More Info</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="row row_custom_info">' +
+                    '<div class="col">' +
+                    '<div class="collapse multi-collapse" id="infoo'+j+'">' +
+                    '<div class="card card-body">' +
+                    ' Description :  ' + car.description + '<br/>' +
+                    ' Contact Info :  ' + car.email + '<br/>' +
+                    ' Add Date :  ' + car.date + '<br/>' +
+                    '</div></div></div></div></div>';
+                $("#watchlist").append(divCarInfo);
             }
-            divCarInfo = '<div class="car_info_div col-sm body-1 px-lg-5"> ' +
-                '<div class="row">' +
-                '<img class="car_info_image" src="' + imglnk+car.imgName.trim() + '">' +
-                '<div class="car_info_details align-middle">' +
-                ' Owner :  ' + car.userName + '<br/>' +
-                ' Make :  ' + car.make + '<br/>' +
-                ' Model :  ' + car.model + '<br/>' +
-                ' Price :  ' + car.price + '<br/>' +
-                ' Year :  ' + car.year + '<br/>' +
-                ' Mileage :  ' + car.mile +
-                '<button class="remove_from_watchlist_button" type="button" value="'+car.carId+'"">Remove From Watchlist</button>' +
-                '<button class="car_more_info_button" type="button" data-toggle="collapse" data-target="#infoo' + j + '" aria-expanded="false" aria-controls="infoo' + j + '">More Info</button>' +
-                '</div>' +
-                '</div>' +
-                '<div class="row row_custom_info">' +
-                '<div class="col">' +
-                '<div class="collapse multi-collapse" id="infoo'+j+'">' +
-                '<div class="card card-body">' +
-                ' Description :  ' + car.description + '<br/>' +
-                ' Contact Info :  ' + car.email + '<br/>' +
-                ' modelId :  ' + car.modelId + '<br/>' +
-                '</div></div></div></div></div>';
-            $("#watchlist").append(divCarInfo);
+        }else if (watchList.length == 0) {
+            $("#watchlist").html('<h5> Your watchlist is empty! Please look up vehicles in the main page!</h5>');
         }
+
         $(".car_more_info_button").click(function () {
             let $this = $(this);
             if ($this.html() == "More Info") {
