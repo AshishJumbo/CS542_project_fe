@@ -88,12 +88,12 @@
 
 .car_more_info_button {
     position: absolute;
-    width: 40%;
+    width: 30%;
     bottom: 5%;
     /*width: 4vmin;*/
     /*height: 4vmin;*/
     border-top: solid 1px solid #eee;
-    right: 31%;
+    right: 40%;
     text-align: center;
     background-color: purple;
     color: #fff;
@@ -240,12 +240,12 @@ button:hover {
 
 .add_to_watchlist{
     position: absolute;
-    width: 25%;
+    width: 38%;
     bottom: 5%;
     /*width: 4vmin;*/
     /*height: 4vmin;*/
     border-top: solid 1px solid #eee;
-    right: 3%;
+    right: 0%;
     text-align: center;
     background-color: purple;
     color: #fff;
