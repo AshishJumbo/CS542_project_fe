@@ -1,4 +1,4 @@
-imgName// AWS credentials
+// AWS credentials
 // var albumBucketName = "BUCKET-NAME";
 // var bucketRegion = "REGION";
 // var IdentityPoolId = "IDENTITYPOOLID";
