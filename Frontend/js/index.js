@@ -9,11 +9,12 @@ $(document).ready(function () {
     var filter_global;
     let filters = ['make', 'model', 'color'];
     let userId = 1; //TODO: T0mi: userId field should only be retrieved from localStorage instead of this fixed value.
-    $("#modal-cancel").click(function () {
-        modal.style.display = 'none';
-    });
+    // $("#modal-cancel").click(function () {
+    //     modal.style.display = 'none';
+    // });
     $("#login-modal-open").click(function () {
         modal.style.display = 'block'
+        return false;
     });
     $("#login_form_submit").click(function (e) {
 				e.preventDefault();
@@ -32,12 +33,11 @@ $(document).ready(function () {
         console.log("logging out");
         localStorage.clear();
         check_login_status();
-
+        return false;
     });
 
 
-    let imglnk = "http://fordauthority.com/wp-content/uploads/2017/12/1966-Shelby-GT350-Mecum-Kissimmee-720x340.jpg";
-    imglnk = "https://s3.us-east-2.amazonaws.com/car-images-cs542/car-images//";
+    let imglnk = "https://s3.us-east-2.amazonaws.com/car-images-cs542/car-images//";
     var addToWatchlist = "images/add-to-watch2.png";
 
 // Get the modal
@@ -206,10 +206,12 @@ $(document).ready(function () {
                 '<div class="row">' +
                 '<img class="car_info_image" src="' + imglnk+car.imgName.trim() + '">' +
                 '<div class="car_info_details align-middle">' +
+                ' <h5>Price :  $' + car.price + '</h5>' +
                 ' Add Date :  ' + car.date + '<br/>' +
                 ' Make :  ' + car.make + '<br/>' +
                 ' Model :  ' + car.model + '<br/>' +
-                ' Price :  ' + car.price + '<br/>' +
+                ' Trim :  ' + car.trim + '<br/>' +
+
                 ' Year :  ' + car.year + '<br/>' +
                 ' Mileage :  ' + car.mile +
                 '<button class="add_to_watchlist" type="button" value="'+car.carId+'">Add to Watchlist</button>' +
