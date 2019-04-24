@@ -109,7 +109,10 @@ $(document).ready(function () {
     });
     $("#trimId").mouseenter(function () {
         let modelId = $("#modelId").val();
-        if ((modelId != "-" || modelId != "") && trimList_global == null) {
+        if(modelId=="-"){
+            return false;
+        }
+        if (modelId != "" && trimList_global == null) {
             let values = {};
             values['modelId'] = modelId;
             get_trim_DB(values);
