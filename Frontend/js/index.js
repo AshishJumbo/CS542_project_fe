@@ -9,9 +9,9 @@ $(document).ready(function () {
     var filter_global;
     let filters = ['make', 'model', 'color'];
     let userId = 1; //TODO: T0mi: userId field should only be retrieved from localStorage instead of this fixed value.
-    // $("#modal-cancel").click(function () {
-    //     modal.style.display = 'none';
-    // });
+    $("#modal-cancel").click(function () {
+        modal.style.display = 'none';
+    });
     $("#login-modal-open").click(function () {
         modal.style.display = 'block'
         return false;

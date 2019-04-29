@@ -92,12 +92,12 @@ $(document).ready(function () {
     });
     $("#modelId").mouseenter(function () {
         let makeId = $("#makeId").val();
-        if (makeId != "-" && modelList_global == null) {
+        // if (makeId != "-" && modelList_global == null) {
             let values = {};
             values['makeId'] = makeId;
             get_model_DB(values);
             console.log("makeId={" + values.makeId);
-        }
+        // }
     });
     $("#modelId").mousedown(function () {
         populateModels(modelList_global);
@@ -109,15 +109,15 @@ $(document).ready(function () {
     });
     $("#trimId").mouseenter(function () {
         let modelId = $("#modelId").val();
-        if(modelId=="-"){
-            return false;
-        }
-        if (modelId != "" && trimList_global == null) {
+        // if(modelId=="-"){
+        //     return false;
+        // }
+        // if (modelId != "" && trimList_global == null) {
             let values = {};
             values['modelId'] = modelId;
             get_trim_DB(values);
             console.log("modelId={" + values.modelId);
-        }
+        // }
     });
     $("#trimId").mousedown(function () {
         populateTrims(trimList_global);
